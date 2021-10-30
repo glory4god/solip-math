@@ -1,3 +1,4 @@
+import Button from '@material-ui/core/Button';
 import { UserList } from 'components/main';
 import fetchUserList from 'lib/apis/user';
 import type { GetServerSideProps, NextPage } from 'next';
@@ -19,6 +20,11 @@ const Main: NextPage<Props> = ({ users }: { users: User[] }) => {
 
       <Container>
         <h2 className="pt-16">Welcome to</h2>
+        <div>
+          <Button>학생관리</Button>
+          <Button>오답관리</Button>
+          <Button></Button>
+        </div>
         <UserList users={users} />
       </Container>
     </>
