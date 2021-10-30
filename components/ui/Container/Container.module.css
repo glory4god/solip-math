@@ -1,0 +1,43 @@
+.container {
+  min-height: 100vh;
+  max-width: 934px;
+  text-align: center;
+  color: black;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+@media (min-width: 740px) {
+  .container {
+    padding-left: 22px;
+    padding-right: 22px;
+    z-index: 1;
+  }
+}
+
+.fullContainer {
+  min-height: 100vh;
+  max-width: 934px;
+  text-align: center;
+  color: black;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+@media (min-width: 740px) {
+  .fullContainer {
+    min-height: 100vh;
+    max-width: 934px;
+    text-align: center;
+    padding-left: 2px;
+    padding-right: 2px;
+    color: black;
+    margin: 0 auto;
+    z-index: 1;
+  }
+}
+
+.blockScroll {
+  height: 100vh;
+  overflow-y: hidden;
+}
