@@ -20,7 +20,6 @@ const User: NextPage = () => {
       ...userProfile,
       [name]: value,
     });
-    console.log(userProfile);
   };
 
   const postUser = async (userProfile: UserEdit) => {

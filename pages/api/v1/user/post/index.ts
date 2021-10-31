@@ -24,7 +24,6 @@ export default async function handler(
       } else {
         var user = new User(edit);
         user.createDate = new Date();
-        console.log(user);
         user.save((err: any) => {
           if (err) {
             return res

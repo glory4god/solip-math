@@ -7,6 +7,7 @@ interface EditMap {
 type Data = {
   value: string;
 };
+
 export const profileEditMap: EditMap[] = [
   {
     tit: '이름',
@@ -32,4 +33,15 @@ export const profileEditMap: EditMap[] = [
     type: 'radio',
     data: [{ value: '남' }, { value: '여' }],
   },
+];
+
+type Menu = {
+  name: string;
+  code: string;
+};
+
+export const studentMenu: Menu[] = [
+  { name: '오답관리', code: '1' },
+  { name: '학생관리', code: '2' },
+  { name: '????관리', code: '3' },
 ];
