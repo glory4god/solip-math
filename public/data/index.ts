@@ -43,5 +43,5 @@ type Menu = {
 export const studentMenu: Menu[] = [
   { name: '오답관리', code: '1' },
   { name: '학생관리', code: '2' },
-  { name: '????관리', code: '3' },
+  { name: '???', code: '3' },
 ];

@@ -6,7 +6,7 @@ import { NEXT_SERVER } from 'config';
 import { useSelector } from 'react-redux';
 import { selectUser } from 'lib/redux/user/userSlice';
 import { useRouter } from 'next/dist/client/router';
-import { fetchUser, fetchWrongAnswers } from 'lib/apis/user';
+import { fetchWrongAnswers } from 'lib/apis/user';
 
 interface Props {
   pageId: string;
@@ -80,17 +80,16 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
   };
 
   const setInitialFetch = async () => {
-    const res = await fetchUser(pageId);
     const books = await fetchWrongAnswers(pageId);
     setAddWrongReq({
       book: '',
       number: '',
-      name: res.name,
+      name: selectedUser,
     });
     setAddNewWrongReq({
       book: '',
       number: '',
-      name: res.name,
+      name: selectedUser,
     });
     setwrongAnswerList(books);
   };
@@ -117,6 +116,7 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
         {wrongAnswerList?.map((wrongs, idx) => {
           return (
             <tr key={idx} className="border-t-2 border-purple-200">
+              {console.log(wrongs)}
               <th>
                 {wrongs.book}{' '}
                 <a

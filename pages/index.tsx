@@ -38,9 +38,11 @@ const Main: NextPage<Props> = ({ userList }: { userList: User[] }) => {
       </Head>
 
       <Container>
-        <h2 className="pt-16">Welcome to</h2>
+        <h2 className="pt-16">솔잎샘 학생관리 시스템</h2>
         <div className="pt-4">
+          <span>학생선택</span>
           <select
+            className="w-32"
             value={selectedUserId}
             onChange={(e) => {
               dispatch(setSelectedUserId(e.target.value));
