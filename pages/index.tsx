@@ -1,16 +1,35 @@
-import Button from '@material-ui/core/Button';
-import { UserList } from 'components/main';
-import fetchUserList from 'lib/apis/user';
-import type { GetServerSideProps, NextPage } from 'next';
+import React from 'react';
 import Head from 'next/head';
-import { User } from 'types/user';
+import type { GetServerSideProps, NextPage } from 'next';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/dist/client/router';
+import {
+  selectUser,
+  setSelectedUser,
+  setSelectedUserId,
+  setUsers,
+} from 'lib/redux/user/userSlice';
+
 import { Container } from '../components/ui/Container';
 
+import { User } from 'types/user';
+import { BASE_URL } from 'config';
+import { fetchUserList } from 'lib/apis/user';
+
 interface Props {
-  users: User[];
+  userList: User[];
 }
 
-const Main: NextPage<Props> = ({ users }: { users: User[] }) => {
+const Main: NextPage<Props> = ({ userList }: { userList: User[] }) => {
+  const { selectedUserId, users } = useSelector(selectUser);
+  const dispatch = useDispatch();
+  const route = useRouter();
+
+  React.useEffect(() => {
+    dispatch(setUsers(userList));
+    dispatch(setSelectedUser(''));
+  }, []);
+
   return (
     <>
       <Head>
@@ -20,12 +39,22 @@ const Main: NextPage<Props> = ({ users }: { users: User[] }) => {
 
       <Container>
         <h2 className="pt-16">Welcome to</h2>
-        <div>
-          <Button>학생관리</Button>
-          <Button>오답관리</Button>
-          <Button></Button>
+        <div className="pt-4">
+          <select
+            value={selectedUserId}
+            onChange={(e) => {
+              dispatch(setSelectedUserId(e.target.value));
+              route.push(`/student/${e.target.value}?pages=1`);
+            }}>
+            {users?.map((user, idx) => {
+              return (
+                <option key={idx} value={user._id}>
+                  {user.name}
+                </option>
+              );
+            })}
+          </select>
         </div>
-        <UserList users={users} />
       </Container>
     </>
   );
@@ -36,7 +65,7 @@ export default Main;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
-      users: (await fetchUserList()) as User[],
+      userList: (await fetchUserList()) as User[],
     },
   };
 };
