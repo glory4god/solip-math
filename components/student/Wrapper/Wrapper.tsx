@@ -1,6 +1,6 @@
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import { BoardBox } from '..';
+import { WrongAnswerBox } from '..';
 interface Props {}
 
 const Wrapper: React.FC<Props> = () => {
@@ -11,17 +11,16 @@ const Wrapper: React.FC<Props> = () => {
   var pageId: string = route.asPath.split('student/')[1];
   pageId = pageId.split('?')[0];
 
-  React.useEffect(() => {}, []);
-
   return (
     <div>
       {pages === '1' && (
         <>
-          <BoardBox pageId={pageId} />
+          <div className="mb-6">오답관리</div>
+          <WrongAnswerBox pageId={pageId} />
         </>
       )}
-      {pages === '2' && <>2번 </>}
-      {pages === '3' && <>3번</>}
+      {pages === '2' && <div className="mb-6">학생관리</div>}
+      {pages === '3' && <div className="mb-6">???</div>}
       <div></div>
     </div>
   );
