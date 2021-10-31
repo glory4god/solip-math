@@ -6,13 +6,18 @@ import { profileEditMap } from 'public/data';
 import Button from '@material-ui/core/Button';
 import { NEXT_SERVER } from 'config';
 import { UserEdit } from 'types/user';
+import { useSelector } from 'react-redux';
+import { selectLogin } from 'lib/redux/login/loginSlice';
+import { useRouter } from 'next/dist/client/router';
 
 const User: NextPage = () => {
+  const { login } = useSelector(selectLogin);
   const [userProfile, setUserProfile] = React.useState<UserEdit>({
     name: '',
     grade: '',
     gender: '',
   });
+  const route = useRouter();
 
   const onChange = (e: any) => {
     const { name, value } = e.target;
@@ -40,6 +45,11 @@ const User: NextPage = () => {
     return alert('학생 추가 성공');
   };
 
+  React.useEffect(() => {
+    if (!login) {
+      route.replace('/login');
+    }
+  }, []);
   return (
     <>
       <Head>
