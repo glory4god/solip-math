@@ -6,7 +6,7 @@ export type UserEdit = {
 
 export interface User extends UserEdit {
   _id: string;
-  createDate: Date;
+  createdDate: Date;
 }
 
 export type WrongAnswerType = {
@@ -24,3 +24,17 @@ export type idAndNumber = {
   _id: string;
   number: string;
 };
+
+export type Management = {
+  author: string;
+  studentName: string;
+  content: string;
+  comment: [];
+  createdDate: Date;
+};
+
+interface Comment {
+  author: string;
+  content: string;
+  createdDate: Date;
+}

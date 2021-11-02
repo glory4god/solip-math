@@ -1,6 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import { WrongAnswerBox } from '..';
+import { WrongAnswerBox, ManagementBox } from '..';
+
 interface Props {}
 
 const Wrapper: React.FC<Props> = () => {
@@ -19,7 +20,12 @@ const Wrapper: React.FC<Props> = () => {
           <WrongAnswerBox pageId={pageId} />
         </>
       )}
-      {pages === '2' && <div className="mb-6">학생관리</div>}
+      {pages === '2' && (
+        <>
+          <div className="mb-6">학생관리</div>
+          <ManagementBox pageId={pageId} />
+        </>
+      )}
       {pages === '3' && <div className="mb-6">???</div>}
       <div></div>
     </div>
