@@ -53,7 +53,7 @@ export default async function handler(
         number: wrong.number,
       });
       console.log(answer);
-      answer.createDate = new Date();
+      answer.createdDate = new Date();
       answer.save((err: any) => {
         if (err) {
           return res.status(400).json({ status: 400, message: 'saved failed' });

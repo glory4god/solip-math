@@ -14,14 +14,16 @@ interface Props {
 
 const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
   const { selectedUserId, selectedUser } = useSelector(selectUser);
-  const [wrongAnswerList, setwrongAnswerList] = React.useState<Wrong[]>();
+  const [wrongAnswerList, setWrongAnswerList] = React.useState<Wrong[]>();
   const route = useRouter();
+  // 책에 따른 번호만 추가하는 상태
   const [addWrongReq, setAddWrongReq] = React.useState<WrongAnswerType>({
     name: '',
     book: '',
     number: '',
   });
 
+  // 책이름까지 설정해서 추가하는 상태
   const [addNewWrongReq, setAddNewWrongReq] = React.useState<WrongAnswerType>({
     name: '',
     book: '',
@@ -29,7 +31,7 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
   });
 
   const postWrongAnswer = async (postData: WrongAnswerType) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/user/wrong/answers`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/student/wrong/answers`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(postData),
@@ -54,9 +56,12 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
 
   const deleteWrongAnswer = async (id: string, book: string = '') => {
     if (book === '') {
-      const res = await fetch(`${NEXT_SERVER}/v1/user/wrong/answers?id=${id}`, {
-        method: 'DELETE',
-      });
+      const res = await fetch(
+        `${NEXT_SERVER}/v1/student/wrong/answers?id=${id}`,
+        {
+          method: 'DELETE',
+        },
+      );
       if (!res.ok) {
         alert('삭제를 실패했습니다.');
       } else {
@@ -64,7 +69,7 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
       }
     } else {
       const res = await fetch(
-        `${NEXT_SERVER}/v1/user/wrong/answers?id=${id}&book=${book}`,
+        `${NEXT_SERVER}/v1/student/wrong/answers?id=${id}&book=${book}`,
         {
           method: 'DELETE',
         },
@@ -91,7 +96,7 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
       number: '',
       name: selectedUser,
     });
-    setwrongAnswerList(books);
+    setWrongAnswerList(books);
   };
 
   React.useEffect(() => {
@@ -99,7 +104,7 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
   }, [route.query]);
 
   return (
-    <table className="w-full h-44">
+    <table className="w-full">
       <colgroup>
         <col className="w-1/6" />
         <col className="w-4/6" />
@@ -131,7 +136,7 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
                     }
                   }}
                   className="text-xs text-red-300">
-                  지우기
+                  책 지우기
                 </a>
               </th>
               <td>
