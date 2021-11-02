@@ -4,7 +4,7 @@ export interface WrongAnswerProps {
   name: string;
   book: string;
   number: string;
-  createDate: Date;
+  createdDate: Date;
 }
 
 const WrongAnswerSchema = new mongoose.Schema<WrongAnswerProps>(
@@ -21,7 +21,7 @@ const WrongAnswerSchema = new mongoose.Schema<WrongAnswerProps>(
       type: String,
       unique: false,
     },
-    createDate: {
+    createdDate: {
       type: Date,
       unique: false,
     },

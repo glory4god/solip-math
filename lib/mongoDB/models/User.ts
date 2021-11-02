@@ -4,7 +4,7 @@ export interface UserProps {
   name: string;
   grade: string;
   gender: string;
-  createDate: Date;
+  createdDate: Date;
 }
 
 const UserSchema = new mongoose.Schema<UserProps>(
@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema<UserProps>(
       required: true,
       unique: false,
     },
-    createDate: {
+    createdDate: {
       type: Date,
       required: true,
       unique: false,
