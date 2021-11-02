@@ -8,7 +8,9 @@ export default async function handler(
 ) {
   await dbConnect();
 
-  User.find({}, (err: any, user: any) => {
-    return res.status(200).json(user);
-  });
+  User.find({})
+    .sort({ grade: 1 })
+    .then((user: any) => {
+      return res.status(200).json(user);
+    });
 }
