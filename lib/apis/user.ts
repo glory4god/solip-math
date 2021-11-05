@@ -6,6 +6,10 @@ export async function fetchUserList() {
   return (await fetcher(`${NEXT_SERVER}/v1/users`)) as User[];
 }
 
+export async function fetchExceptUserList() {
+  return (await fetcher(`${NEXT_SERVER}/v1/users/except`)) as User[];
+}
+
 export async function fetchUser(id: string) {
   return (await fetcher(`${NEXT_SERVER}/v1/user/${id}`)) as User;
 }

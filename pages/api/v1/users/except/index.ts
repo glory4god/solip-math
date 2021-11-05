@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   await dbConnect();
 
-  User.find({ auth: true })
+  User.find({ auth: false })
     .sort({ grade: 1 })
     .then((user: any) => {
       return res.status(200).json(user);

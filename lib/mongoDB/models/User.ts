@@ -4,6 +4,7 @@ export interface UserProps {
   name: string;
   grade: string;
   gender: string;
+  auth: boolean;
   createdDate: Date;
 }
 
@@ -26,6 +27,11 @@ const UserSchema = new mongoose.Schema<UserProps>(
     },
     createdDate: {
       type: Date,
+      required: true,
+      unique: false,
+    },
+    auth: {
+      type: Boolean,
       required: true,
       unique: false,
     },

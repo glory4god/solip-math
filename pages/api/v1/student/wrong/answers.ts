@@ -34,6 +34,7 @@ export default async function handler(
       ],
       (err: any, data: any) => {
         if (data) {
+          console.log(data);
           return res.status(200).json(data);
         } else {
           return res.status(400).json({ status: 400, message: 'get failed' });
