@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { dbConnect } from 'lib/mongoDB/dbConnect';
 import User from 'lib/mongoDB/models/User';
 import WrongAnswer from 'lib/mongoDB/models/WrongAnswer';
+import Management from 'lib/mongoDB/models/Management';
 
 type Post = {
   name: string;
@@ -17,6 +18,8 @@ export default async function handler(
 
   const edit = req.body;
 
+  const { id } = req.query;
+
   if (req.method === 'POST') {
     User.findOne({ name: edit.name }, (err: any, user: any) => {
       if (user) {
@@ -26,6 +29,7 @@ export default async function handler(
       } else {
         var user = new User(edit);
         user.createdDate = new Date();
+        user.auth = true;
         user.save((err: any) => {
           if (err) {
             return res
@@ -40,8 +44,6 @@ export default async function handler(
       }
     });
   } else if (req.method === 'DELETE') {
-    const { id } = req.query;
-
     User.findOneAndDelete({ _id: id }, (err: any, user: any) => {
       if (err) {
         return res.status(400).json({ status: 400, message: 'delete failed' });
@@ -54,9 +56,28 @@ export default async function handler(
           } else {
             return res
               .status(200)
-              .json({ status: 200, message: 'delete success' });
+              .json({ status: 200, message: 'wrongAnswers delete success' });
           }
         });
+        Management.deleteMany({ name: user.name }, (err: any) => {
+          if (err) {
+            return res
+              .status(400)
+              .json({ status: 400, message: 'management delete failed' });
+          } else {
+            return res
+              .status(200)
+              .json({ status: 200, message: 'management delete success' });
+          }
+        });
+      }
+    });
+  } else if (req.method === 'PATCH') {
+    User.findByIdAndUpdate(id, { $set: { auth: false } }, (err) => {
+      if (err) {
+        return res.status(400).json({ status: 400, message: '수정 실패' });
+      } else {
+        return res.status(200).json({ status: 200, message: '수정 성공' });
       }
     });
   }
