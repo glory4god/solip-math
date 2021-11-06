@@ -10,30 +10,20 @@
 
 .mainlogo {
   text-align: left;
-  width: 400px;
-  padding-top: 2px;
 }
 
 .navigator {
   display: flex;
   margin: auto auto;
-  padding: 12px 4px 0px 20px;
+  padding: 16px 16px 0px 16px;
   justify-content: space-between;
   align-items: center;
-}
-.rightBanner {
-  display: grid;
-  width: 200px;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-}
-
-.input {
-  display: none;
 }
 @media (min-width: 740px) {
   .navigator {
     display: flex;
     max-width: 940px;
+    padding: 16px 4px 0px 20px;
     margin: auto auto;
     justify-content: space-between;
     align-items: center;

@@ -7,7 +7,8 @@ const Footer = () => {
   return (
     <div className={cn(s.container)}>
       <div className={s.footer}>
-        <span>footer</span>
+        <span>Management System 2021.11~</span>
+        <span>designed by HY</span>
       </div>
     </div>
   );

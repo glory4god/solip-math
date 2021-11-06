@@ -114,7 +114,7 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
 
   React.useEffect(() => {
     setInitialFetch();
-  }, [route.query]);
+  }, [route.query, selectedUser]);
 
   return (
     <table className="w-full">
@@ -151,14 +151,15 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
                   );
                 })}
               </td>
-              <td className="flex py-4 justify-center">
-                <Button onClick={() => {}}>댓글달기</Button>
+              <td className="flex py-4 justify-center sm:flex-row flex-col">
+                <Button onClick={() => {}}>댓글</Button>
+                <Button onClick={() => {}}>수정</Button>
               </td>
             </tr>
           );
         })}
         <tr>
-          <th className="px-8">
+          <th className="sm:px-8 px-2">
             <input
               className="w-full"
               type="text"
@@ -167,7 +168,6 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
               onChange={postManagementOnChange}
             />
           </th>
-          {console.log(postManagement)}
           <td className="px-4">
             <textarea
               className="w-full"
@@ -176,7 +176,7 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
               onChange={postManagementOnChange}
             />
           </td>
-          <td className="px-8">
+          <td className="sm:px-8">
             <Button
               onClick={() => {
                 if (postManagement.author === '') {

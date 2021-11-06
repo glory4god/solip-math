@@ -19,10 +19,10 @@ const Navbar = () => {
               <b>솔잎샘 학생관리</b>
             </a>
           </Link>
-          <div className="space-x-4">
+          <div className="space-x-4 flex">
             <Link href="/manage/user">
               <a>
-                <b>학생관리(추가/삭제)</b>
+                <b>학생관리</b>
               </a>
             </Link>
             <a

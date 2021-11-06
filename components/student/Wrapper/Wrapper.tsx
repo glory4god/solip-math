@@ -16,17 +16,17 @@ const Wrapper: React.FC<Props> = () => {
     <div>
       {pages === '1' && (
         <>
-          <div className="mb-6">오답관리</div>
+          <div className="sm:mb-6 my-2">오답관리</div>
           <WrongAnswerBox pageId={pageId} />
         </>
       )}
       {pages === '2' && (
         <>
-          <div className="mb-6">학생관리</div>
+          <div className="sm:mb-6 my-2">학생관리</div>
           <ManagementBox pageId={pageId} />
         </>
       )}
-      {pages === '3' && <div className="mb-6">???</div>}
+      {pages === '3' && <div className="sm:mb-6 my-2">???</div>}
       <div></div>
     </div>
   );

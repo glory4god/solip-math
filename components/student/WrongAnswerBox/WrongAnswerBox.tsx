@@ -121,7 +121,6 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
         {wrongAnswerList?.map((wrongs, idx) => {
           return (
             <tr key={idx} className="border-t-2 border-purple-200">
-              {console.log(wrongs)}
               <th>
                 {wrongs.book}{' '}
                 <a
@@ -153,7 +152,7 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
                   );
                 })}
               </td>
-              <td className="flex py-4">
+              <td className="flex py-4 sm:flex-row flex-col">
                 <input
                   className="w-full"
                   name={wrongs.book}
@@ -194,7 +193,7 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
           );
         })}
         <tr>
-          <th className="px-8">
+          <th className="sm:px-8 px-1">
             <input
               className="w-full"
               type="text"
@@ -226,7 +225,7 @@ const WrongAnswerBox: React.FC<Props> = ({ pageId }) => {
               onChange={newBookOnChange}
             />
           </td>
-          <td className="px-8">
+          <td className="sm:px-8">
             <Button
               onClick={() => {
                 if (addNewWrongReq.book === '') {
