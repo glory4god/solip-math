@@ -24,7 +24,7 @@ export default async function handler(
     const postManagement = req.body;
     var management = new Management(postManagement);
     management.createdDate = new Date();
-    console.log(management);
+
     management.save((err: any) => {
       if (err) {
         return res.status(400).json({ status: 400, message: 'save failed' });

@@ -34,7 +34,6 @@ export default async function handler(
       ],
       (err: any, data: any) => {
         if (data) {
-          console.log(data);
           return res.status(200).json(data);
         } else {
           return res.status(400).json({ status: 400, message: 'get failed' });
@@ -53,7 +52,7 @@ export default async function handler(
         book: wrong.book,
         number: wrong.number,
       });
-      console.log(answer);
+
       answer.createdDate = new Date();
       answer.save((err: any) => {
         if (err) {
@@ -67,7 +66,7 @@ export default async function handler(
     }
   } else if (req.method === 'DELETE') {
     const { book } = req.query;
-    console.log(book);
+
     if (!book) {
       WrongAnswer.findByIdAndRemove({ _id: id }, (err: any) => {
         if (err) {
@@ -86,7 +85,6 @@ export default async function handler(
       WrongAnswer.deleteMany(
         { name: user.name, book: book },
         (err: any, data: any) => {
-          console.log(data);
           if (err) {
             return res
               .status(400)
