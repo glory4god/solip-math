@@ -2,26 +2,36 @@ import type { GetServerSideProps, NextPage } from 'next';
 import React from 'react';
 import Head from 'next/head';
 import { Container } from 'components/ui/Container';
-import { profileEditMap } from 'public/data';
+import { grades, profileEditMap } from 'public/data';
 import Button from '@material-ui/core/Button';
 import { NEXT_SERVER } from 'config';
 import { User, UserEdit } from 'types/user';
 import { useSelector } from 'react-redux';
 import { selectLogin } from 'lib/redux/login/loginSlice';
 import { useRouter } from 'next/dist/client/router';
-import { fetchUserList } from 'lib/apis/user';
+import { fetchExceptUserList, fetchUserList } from 'lib/apis/user';
 
 interface Props {
   userList: User[];
+  exceptUserList: User[];
 }
 
-const User: NextPage<Props> = ({ userList }: { userList: User[] }) => {
+const User: NextPage<Props> = ({
+  userList,
+  exceptUserList,
+}: {
+  userList: User[];
+  exceptUserList: User[];
+}) => {
   const { login } = useSelector(selectLogin);
   const [userProfile, setUserProfile] = React.useState<UserEdit>({
     name: '',
     grade: '',
     gender: '',
   });
+  const [currIdx, setCurrIdx] = React.useState<number>(0);
+
+  const [exceptCurrIdx, setExceptCurrIdx] = React.useState<number>(0);
   const route = useRouter();
 
   const onChange = (e: any) => {
@@ -63,11 +73,24 @@ const User: NextPage<Props> = ({ userList }: { userList: User[] }) => {
     return alert('학생을 삭제했습니다.');
   };
 
+  const handleUserInsert = async (userId: string) => {
+    const res = await fetch(`${NEXT_SERVER}/v1/user/post?id=${userId}`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+    });
+    if (!res.ok) {
+      return alert('학생 제외하지 못했습니다.');
+    }
+    route.replace(route.asPath);
+    return alert('학생을 제외했습니다.');
+  };
+
   React.useEffect(() => {
     if (!login) {
       route.replace('/login');
     }
   }, []);
+
   return (
     <>
       <Head>
@@ -77,7 +100,7 @@ const User: NextPage<Props> = ({ userList }: { userList: User[] }) => {
       </Head>
 
       <Container>
-        <div className="grid grid-cols-2 pt-8 px-6 text-left">
+        <div className="grid sm:grid-cols-2 grid-cols-1 pt-8 px-6 text-left">
           <div>
             <h2 className="pt-16 pb-8">학생 정보 추가</h2>
             {profileEditMap.map((edit, idx) => {
@@ -119,28 +142,99 @@ const User: NextPage<Props> = ({ userList }: { userList: User[] }) => {
             </Button>
           </div>
           <div>
-            <h2 className="pt-16 pb-8">학생 정보 삭제</h2>
+            <h2 className="pt-16 pb-8">전체 학생 정보 [{userList.length}]</h2>
             <div>
-              {userList.map((user) => {
+              {grades.map((grade, idx) => {
+                var count = 0;
+                userList.forEach((user) => {
+                  if (user.grade === grade) {
+                    count += 1;
+                  }
+                });
                 return (
-                  <div className="flex pb-2 justify-between" key={user.name}>
-                    <div>
-                      <span>
-                        <b>{user.name}</b>
-                      </span>{' '}
-                      <span>{user.grade}</span>
-                    </div>
-                    <span
+                  <div
+                    key={grade}
+                    className="flex py-2 flex-col justify-center">
+                    <a
                       onClick={() => {
-                        const result = confirm(
-                          `${user.name}학생을 삭제하시겠습니까?`,
-                        );
-                        if (result) {
-                          handleUserDelete(user._id);
-                        }
+                        setCurrIdx(idx);
                       }}>
-                      <a>삭제</a>
-                    </span>
+                      <b>{grade}</b> [{count}명]
+                    </a>
+                    {currIdx === idx &&
+                      userList.map((user) => {
+                        if (user.grade === grade) {
+                          return (
+                            <div
+                              className="flex justify-between items-center"
+                              key={user.name}>
+                              <span>{user.name}</span>
+                              <Button
+                                variant="outlined"
+                                color="secondary"
+                                onClick={() => {
+                                  const result = confirm(
+                                    `${user.name}학생을 제외하시겠습니까?`,
+                                  );
+                                  if (result) {
+                                    handleUserInsert(user._id);
+                                  }
+                                }}>
+                                <a>제외</a>
+                              </Button>
+                            </div>
+                          );
+                        }
+                      })}
+                  </div>
+                );
+              })}
+            </div>
+            <h2 className="pt-16 pb-8">
+              제외 학생 정보 [{exceptUserList.length}]
+            </h2>
+            <div>
+              {grades.map((grade, idx) => {
+                var count = 0;
+                exceptUserList.forEach((user) => {
+                  if (user.grade === grade) {
+                    count += 1;
+                  }
+                });
+                return (
+                  <div
+                    key={grade}
+                    className="flex py-2 flex-col justify-center">
+                    <a
+                      onClick={() => {
+                        setExceptCurrIdx(idx);
+                      }}>
+                      <b>{grade}</b> [{count}명]
+                    </a>
+                    {exceptCurrIdx === idx &&
+                      exceptUserList.map((user) => {
+                        if (user.grade === grade)
+                          return (
+                            <div
+                              className="flex justify-between items-center"
+                              key={user.name}>
+                              <span>{user.name}</span>
+                              <Button
+                                variant="outlined"
+                                color="secondary"
+                                onClick={() => {
+                                  const result = confirm(
+                                    `${user.name}학생을 삭제하시겠습니까?`,
+                                  );
+                                  if (result) {
+                                    handleUserDelete(user._id);
+                                  }
+                                }}>
+                                <a>삭제</a>
+                              </Button>
+                            </div>
+                          );
+                      })}
                   </div>
                 );
               })}
@@ -158,6 +252,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       userList: (await fetchUserList()) as User[],
+      exceptUserList: (await fetchExceptUserList()) as User[],
     },
   };
 };
