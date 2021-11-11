@@ -8,7 +8,9 @@ export default async function handler(
 ) {
   await dbConnect();
 
-  User.find({ auth: true })
+  const { auth } = req.query;
+
+  User.find({ auth: auth })
     .sort({ name: 1 })
     .then((user: any) => {
       return res.status(200).json(user);

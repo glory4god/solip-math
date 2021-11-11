@@ -26,6 +26,7 @@ export type idAndNumber = {
 };
 
 export type Management = {
+  _id: string;
   author: string;
   studentName: string;
   content: string;

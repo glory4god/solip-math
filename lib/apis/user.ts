@@ -3,11 +3,18 @@ import { Wrong, User, Management } from 'types/user';
 import fetcher from './fetcher';
 
 export async function fetchUserList() {
-  return (await fetcher(`${NEXT_SERVER}/v1/users`)) as User[];
+  return (await fetcher(`${NEXT_SERVER}/v1/users?auth=true`)) as User[];
+}
+
+export async function fetchUserIds() {
+  const users = (await fetcher(`${NEXT_SERVER}/v1/users?auth=true`)) as User[];
+  return users.map((user) => {
+    return user._id;
+  });
 }
 
 export async function fetchExceptUserList() {
-  return (await fetcher(`${NEXT_SERVER}/v1/users/except`)) as User[];
+  return (await fetcher(`${NEXT_SERVER}/v1/users?auth=false`)) as User[];
 }
 
 export async function fetchUser(id: string) {
@@ -22,6 +29,6 @@ export async function fetchWrongAnswers(id: string) {
 
 export async function fetchManagements(studentNm: string) {
   return (await fetcher(
-    `${NEXT_SERVER}/v1/student/management/${studentNm}`,
+    `${NEXT_SERVER}/v1/student/managements/${studentNm}`,
   )) as Management[];
 }
