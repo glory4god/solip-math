@@ -32,6 +32,5 @@ export default async function handler(
         return res.status(200).json({ status: 200, message: 'save success' });
       }
     });
-  } else if (req.method === 'DELETE') {
   }
 }

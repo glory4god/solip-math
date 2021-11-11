@@ -22,6 +22,7 @@ export default async function handler(
     WrongAnswer.aggregate(
       [
         { $match: { name: user.name } },
+        { $sort: { number: 1 } },
         { $group: { _id: '$book', numbers: { $push: '$$ROOT' } } },
         {
           $project: {

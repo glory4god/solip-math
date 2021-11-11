@@ -22,14 +22,14 @@ type PostManagement = {
 const ManagementBox: React.FC<Props> = ({ pageId }) => {
   const { selectedUserId, selectedUser } = useSelector(selectUser);
   const [managementList, setManagementList] = React.useState<Management[]>();
-
-  const [addWrongReq, setAddWrongReq] = React.useState<WrongAnswerType>({
-    name: '',
-    book: '',
-    number: '',
+  const [postManagement, setPostManagement] = React.useState<PostManagement>({
+    author: '',
+    studentName: '',
+    content: '',
   });
 
-  const [postManagement, setPostManagement] = React.useState<PostManagement>({
+  const [isEditing, setIsEditing] = React.useState<boolean>(false);
+  const [editManagement, setEditManagement] = React.useState<PostManagement>({
     author: '',
     studentName: '',
     content: '',
@@ -39,7 +39,7 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
 
   const handlePostManagement = async (postData: PostManagement) => {
     const res = await fetch(
-      `${NEXT_SERVER}/v1/student/management/${postData.studentName}`,
+      `${NEXT_SERVER}/v1/student/management/post?studentName=${postData.studentName}`,
       {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -49,14 +49,10 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
     if (!res.ok) {
       alert('저장에 실패했습니다.');
     } else {
-      setAddWrongReq({
-        name: '',
-        book: '',
-        number: '',
-      });
       setInitialFetch();
     }
   };
+
   const postManagementOnChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -67,43 +63,45 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
     }));
   };
 
-  const deleteWrongAnswer = async (id: string, book: string = '') => {
-    if (book === '') {
-      const res = await fetch(
-        `${NEXT_SERVER}/v1/student/wrong/answers?id=${id}`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (!res.ok) {
-        alert('삭제를 실패했습니다.');
-      } else {
-        alert('삭제를 성공했습니다.');
-      }
-    } else {
-      const res = await fetch(
-        `${NEXT_SERVER}/v1/student/wrong/answers?id=${id}&book=${book}`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (!res.ok) {
-        alert('삭제를 실패했습니다.');
-      } else {
-        alert('삭제를 성공했습니다.');
-      }
-    }
+  const patchManagementOnChange = async (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setEditManagement(() => ({
+      ...editManagement,
+      [name]: value,
+    }));
+  };
 
+  const deleteManagement = async (id: string) => {
+    const res = await fetch(`${NEXT_SERVER}/v1/student/management/${id}/post`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) {
+      alert('삭제를 실패했습니다.');
+    } else {
+      alert('삭제를 성공했습니다.');
+    }
+    setInitialFetch();
+  };
+  const patchManagement = async (id: string, postData: PostManagement) => {
+    const res = await fetch(`${NEXT_SERVER}/v1/student/management/${id}/post`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(postData),
+    });
+    if (!res.ok) {
+      alert('수정을 실패했습니다.');
+    } else {
+      setIsEditing(false);
+      alert('수정을 성공했습니다.');
+    }
     setInitialFetch();
   };
 
   const setInitialFetch = async () => {
     const management = await fetchManagements(selectedUser);
-    setAddWrongReq({
-      book: '',
-      number: '',
-      name: selectedUser,
-    });
+
     setPostManagement({
       author: '',
       studentName: selectedUser,
@@ -131,37 +129,10 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
         </tr>
       </thead>
       <tbody>
-        {managementList?.map((management, idx) => {
-          return (
-            <tr key={idx} className="border-t-2 border-purple-200">
-              <th>
-                {management.author}
-                <br />
-                <span className="text-xs">
-                  {mongoDateFormatting(management.createdDate)}
-                </span>
-              </th>
-              <td className="text-left px-4">
-                {management.content.split('\n').map((content: string, idx) => {
-                  return (
-                    <span key={idx}>
-                      {content}
-                      <br />
-                    </span>
-                  );
-                })}
-              </td>
-              <td className="flex py-4 justify-center sm:flex-row flex-col">
-                <Button onClick={() => {}}>댓글</Button>
-                <Button onClick={() => {}}>수정</Button>
-              </td>
-            </tr>
-          );
-        })}
         <tr>
           <th className="sm:px-8 px-2">
             <input
-              className="w-full"
+              className="w-full h-full"
               type="text"
               name="author"
               value={postManagement.author}
@@ -191,6 +162,97 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
             </Button>
           </td>
         </tr>
+        {managementList?.map((management, idx) => {
+          return (
+            <>
+              {isEditing ? (
+                <tr>
+                  <th className="sm:px-8 px-2">
+                    <input
+                      className="w-full"
+                      type="text"
+                      name="author"
+                      value={editManagement.author}
+                      onChange={patchManagementOnChange}
+                    />
+                  </th>
+                  <td className="px-4">
+                    <textarea
+                      className="w-full"
+                      name="content"
+                      value={editManagement.content}
+                      onChange={patchManagementOnChange}
+                    />
+                  </td>
+                  <td className="sm:px-8 flex py-4 justify-center sm:flex-row flex-col">
+                    <Button
+                      onClick={() => {
+                        if (editManagement.author === '') {
+                          alert('작성자를 입력하세요');
+                        } else if (editManagement.content === '') {
+                          alert('내용을 입력하세요');
+                        } else {
+                          patchManagement(management._id, editManagement);
+                        }
+                      }}>
+                      수정
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setIsEditing(false);
+                      }}>
+                      취소
+                    </Button>
+                  </td>
+                </tr>
+              ) : (
+                <tr key={idx} className="border-t-2 border-purple-200">
+                  <th>
+                    {management.author}
+                    <br />
+                    <span className="text-xs">
+                      {mongoDateFormatting(management.createdDate)}
+                    </span>
+                  </th>
+                  <td className="text-left px-4">
+                    {management.content
+                      .split('\n')
+                      .map((content: string, idx) => {
+                        return (
+                          <span key={idx}>
+                            {content}
+                            <br />
+                          </span>
+                        );
+                      })}
+                  </td>
+                  <td className="flex py-4 justify-center sm:flex-row flex-col">
+                    <Button
+                      onClick={() => {
+                        setIsEditing(true);
+                        setEditManagement({
+                          author: management.author,
+                          content: management.content,
+                          studentName: management.studentName,
+                        });
+                      }}>
+                      수정
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        const result = confirm('글을 삭제하시겠습니까?');
+                        if (result) {
+                          deleteManagement(management._id);
+                        }
+                      }}>
+                      삭제
+                    </Button>
+                  </td>
+                </tr>
+              )}
+            </>
+          );
+        })}
       </tbody>
     </table>
   );
