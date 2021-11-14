@@ -1,4 +1,5 @@
 import { NEXT_SERVER } from 'config';
+import { ClassManagement } from 'types/class';
 import { Wrong, User, Management } from 'types/user';
 import fetcher from './fetcher';
 
@@ -31,4 +32,9 @@ export async function fetchManagements(studentNm: string) {
   return (await fetcher(
     `${NEXT_SERVER}/v1/student/managements/${studentNm}`,
   )) as Management[];
+}
+export async function fetchClassManagements(grade: string) {
+  return (await fetcher(
+    `${NEXT_SERVER}/v1/class/managements/${grade}`,
+  )) as ClassManagement[];
 }
