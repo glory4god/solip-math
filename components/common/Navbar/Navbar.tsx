@@ -20,9 +20,19 @@ const Navbar = () => {
             </a>
           </Link>
           <div className="space-x-4 flex">
-            <Link href="/manage/user">
+            <Link href="/admin/student">
               <a>
-                <b>학생관리</b>
+                <b>학생별</b>
+              </a>
+            </Link>
+            <Link href="/admin/class">
+              <a>
+                <b>학년별</b>
+              </a>
+            </Link>
+            <Link href="/admin/manage/user">
+              <a>
+                <b>페이지관리</b>
               </a>
             </Link>
             <a
