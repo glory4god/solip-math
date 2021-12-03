@@ -139,7 +139,9 @@ const ManagementBox: React.FC<Props> = ({ pageId }) => {
           <ManageMentInput
             author={postManagement.author}
             content={postManagement.content}
-            onChange={(e) => postManagementOnChange(e)}
+            onChange={(
+              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+            ) => postManagementOnChange(e)}
             handlePost={() => handlePostManagement(postManagement)}
             tag={'추가'}
           />
