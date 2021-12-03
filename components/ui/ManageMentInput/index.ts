@@ -1,1 +1,1 @@
-export { default } from './ManageMentInput';
+export { default } from './ManagementInput';
