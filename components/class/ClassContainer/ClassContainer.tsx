@@ -153,7 +153,11 @@ const ClassContainer: React.FC<Props> = ({ className, grade }) => {
                 <ManageMentInput
                   author={postManagement.author}
                   content={postManagement.content}
-                  onChange={(e) => postManagementOnChange(e)}
+                  onChange={(
+                    e: React.ChangeEvent<
+                      HTMLInputElement | HTMLTextAreaElement
+                    >,
+                  ) => postManagementOnChange(e)}
                   handlePost={() => handlePostManagement(postManagement)}
                   tag={'추가'}
                 />
@@ -180,7 +184,11 @@ const ClassContainer: React.FC<Props> = ({ className, grade }) => {
                         <ManageMentInput
                           author={editManagement.author}
                           content={editManagement.content}
-                          onChange={(e) => patchManagementOnChange(e)}
+                          onChange={(
+                            e: React.ChangeEvent<
+                              HTMLInputElement | HTMLTextAreaElement
+                            >,
+                          ) => patchManagementOnChange(e)}
                           handlePost={() =>
                             patchManagement(management._id, editManagement)
                           }
