@@ -43,7 +43,7 @@ type Menu = {
 export const studentMenu: Menu[] = [
   { name: '오답관리', code: '1' },
   { name: '학생관리', code: '2' },
-  { name: '???', code: '3' },
+  { name: '성적관리', code: '3' },
 ];
 
 export const grades = ['중1', '중2', '중3', '고1', '고2', '고3'];

@@ -120,7 +120,10 @@ const ManagementContainer: React.FC<Props> = ({}) => {
 
   return (
     <>
-      <div className="sm:mb-6 my-2">학생관리</div>
+      <div className="my-2">학생관리</div>
+      <div className="flex justify-end">
+        <Button>글쓰기</Button>
+      </div>
       <table className="w-full">
         <colgroup>
           <col className="w-1/6" />

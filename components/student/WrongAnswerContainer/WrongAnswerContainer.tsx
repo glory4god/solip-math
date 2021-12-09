@@ -114,7 +114,10 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
 
   return (
     <>
-      <div className="sm:mb-6 my-2">오답관리</div>
+      <div className=" my-2">오답관리</div>
+      <div className="flex justify-end">
+        <Button>책추가</Button>
+      </div>
       <table className="w-full">
         <colgroup>
           <col className="w-1/6" />
