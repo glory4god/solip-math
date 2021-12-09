@@ -42,8 +42,8 @@ const Main: NextPage<Props> = ({ userList }: { userList: User[] }) => {
 
       <Container>
         <h2 className="pt-20 pb-4 text-2xl">솔잎샘 학생관리 시스템</h2>
-        <div className="pt-4">
-          <span>학생선택</span>
+        <div className="pt-4 ">
+          <span className="text-xl">학생선택</span>
           <select
             className="w-16"
             value={selectedGrade}

@@ -196,7 +196,7 @@ const ClassContainer: React.FC<Props> = ({ className, grade }) => {
                         />
                       </tr>
                     ) : (
-                      <tr key={idx} className="border-t-2">
+                      <tr key={idx}>
                         <th>
                           {management.author}
                           <br />

@@ -56,9 +56,9 @@ const Student: NextPage<Props> = () => {
         <meta name="description" content="학생관리" />
       </Head>
       <Container>
-        <div className="flex justify-between sm:pt-20 sm:flex-row sm:pb-4 flex-col pt-20 pb-4 text-2xl">
+        <div className="flex justify-between sm:pt-20 sm:flex-row sm:pb-4 flex-col pt-20 pb-4 ">
           <div className="sm:block">
-            <span>학생선택 </span>
+            <span className="text-xl">학생선택 </span>
             <select
               className="w-16"
               value={selectedGrade}
