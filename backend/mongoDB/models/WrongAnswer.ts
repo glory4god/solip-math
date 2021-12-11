@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 export interface WrongAnswerProps {
-  name: string;
+  studentName: string;
   book: string;
   number: string;
   createdDate: Date;
@@ -9,7 +9,7 @@ export interface WrongAnswerProps {
 
 const WrongAnswerSchema = new mongoose.Schema<WrongAnswerProps>(
   {
-    name: {
+    studentName: {
       type: String,
       unique: false,
     },
