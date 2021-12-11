@@ -38,8 +38,8 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
         book: '',
         number: '',
       });
-      setInitialFetch();
     }
+    setInitialFetch();
   };
 
   const deleteWrongAnswer = async (id: string, book: string = '') => {
@@ -71,7 +71,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
     setInitialFetch();
   };
 
-  // FIXME: 페이지 초기화
+  // FIXME: 페이지 초기화 로직
   const setInitialFetch = async () => {
     router.replace(router.asPath);
     setAddWrongReq({
@@ -83,6 +83,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
 
   return (
     <>
+      {console.log(router.asPath)}
       <div className=" my-2">오답관리</div>
       <div className="flex justify-end">
         <Button onClick={() => dispatch(openWriteModal('wrong'))}>
