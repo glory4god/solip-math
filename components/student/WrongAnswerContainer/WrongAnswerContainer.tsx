@@ -6,17 +6,14 @@ import { NEXT_SERVER } from 'config';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from 'lib/redux/user/userSlice';
 import { useRouter } from 'next/dist/client/router';
-import { openWriteModal } from 'lib/redux/modal/modalSlice';
+import { openWriteModal, selectModal } from 'lib/redux/modal/modalSlice';
 import { fetchWrongAnswers } from 'lib/apis/user';
 
 interface Props {}
 
 const WrongAnswerContainer: React.FC<Props> = ({}) => {
-  const {
-    selectedUserId,
-    selectedUser,
-    //  wrongAnswerList
-  } = useSelector(selectUser);
+  const { selectedUserId, selectedUser } = useSelector(selectUser);
+  const { showWrongWriteModal } = useSelector(selectModal);
   const [wrongAnswerList, setWrongAnswerList] = React.useState<Wrong[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
@@ -78,7 +75,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
   };
 
   // FIXME: 페이지 초기화 로직
-  const setInitialFetch = async () => {
+  const setInitialFetch = React.useCallback(async () => {
     setIsLoading(true);
     const books = await fetchWrongAnswers(selectedUserId);
     books.map((book, idx) => {
@@ -91,11 +88,13 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
       book: '',
       number: '',
     });
-  };
+  }, [selectedUser, selectedUserId]);
 
   React.useEffect(() => {
-    setInitialFetch();
-  }, [router.query, selectedUser]);
+    if (showWrongWriteModal === false) {
+      setInitialFetch();
+    }
+  }, [selectedUser, setInitialFetch, showWrongWriteModal]);
 
   return (
     <>

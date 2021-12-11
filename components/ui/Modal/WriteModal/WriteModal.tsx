@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import { ObjType } from 'types/common';
-import { PostGrade, WrongAnswerType } from 'types/user';
 
 import { closeWriteModal } from 'lib/redux/modal/modalSlice';
 

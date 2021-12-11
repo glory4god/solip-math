@@ -1,11 +1,10 @@
 import React from 'react';
 import { NEXT_SERVER } from 'config';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/dist/client/router';
 
 import { selectUser } from 'lib/redux/user/userSlice';
 import { mongoDateFormatting } from 'lib/common';
-import { openWriteModal } from 'lib/redux/modal/modalSlice';
+import { openWriteModal, selectModal } from 'lib/redux/modal/modalSlice';
 
 import Button from '@material-ui/core/Button';
 import { fetchManagements } from 'lib/apis/user';
@@ -20,14 +19,10 @@ type PostManagement = {
 };
 
 const ManagementContainer: React.FC<Props> = ({}) => {
-  const {
-    selectedUserId,
-    selectedUser,
-    // , managementList
-  } = useSelector(selectUser);
+  const { selectedUserId, selectedUser } = useSelector(selectUser);
+  const { showManagementWriteModal } = useSelector(selectModal);
 
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [managementList, setManagementList] = React.useState<Management[]>([]);
@@ -77,7 +72,7 @@ const ManagementContainer: React.FC<Props> = ({}) => {
     setInitialFetch();
   };
 
-  const setInitialFetch = async () => {
+  const setInitialFetch = React.useCallback(async () => {
     setIsLoading(true);
     const management = await fetchManagements(selectedUserId);
     setManagementList(management);
@@ -89,11 +84,13 @@ const ManagementContainer: React.FC<Props> = ({}) => {
     });
 
     setEditId('');
-  };
+  }, [selectedUserId]);
 
   React.useEffect(() => {
-    setInitialFetch();
-  }, [router.query, selectedUser]);
+    if (showManagementWriteModal === false) {
+      setInitialFetch();
+    }
+  }, [selectedUser, setInitialFetch, showManagementWriteModal]);
 
   return (
     <>
