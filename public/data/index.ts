@@ -47,3 +47,33 @@ export const studentMenu: Menu[] = [
 ];
 
 export const grades = ['중1', '중2', '중3', '고1', '고2', '고3'];
+
+type GradeTag = 'name' | 'date' | 'testName' | 'score' | 'comment';
+
+export type GradeModal = {
+  학생이름: GradeTag;
+  시험일시: GradeTag;
+  시험이름: GradeTag;
+  '점 수': GradeTag;
+  '내 용': GradeTag;
+};
+export const gradeModalTag: GradeModal = {
+  학생이름: 'name',
+  시험일시: 'date',
+  시험이름: 'testName',
+  '점 수': 'score',
+  '내 용': 'comment',
+};
+
+type AddBookTag = 'name' | 'book' | 'number';
+
+export type AddBookModal = {
+  학생이름: AddBookTag;
+  책이름: AddBookTag;
+  오답번호: AddBookTag;
+};
+export const addBookModalTag: AddBookModal = {
+  학생이름: 'name',
+  책이름: 'book',
+  오답번호: 'number',
+};

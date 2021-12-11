@@ -1,30 +1,46 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/dist/client/router';
+import { useDispatch, useSelector } from 'react-redux';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { Container } from 'components/ui/Container';
+
+import { selectLogin } from 'lib/redux/login/loginSlice';
+import { BASE_URL } from 'config';
 
 import Button from '@material-ui/core/Button';
-
-import { User } from 'types/user';
-import { useRouter } from 'next/dist/client/router';
-import { BASE_URL } from 'config';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   selectUser,
   setSelectedGrade,
   setSelectedUser,
   setSelectedUserId,
+  setWrongAnswerList,
+  setManagementList,
 } from 'lib/redux/user/userSlice';
 import { grades, studentMenu } from 'public/data';
-import { Wrapper } from 'components/student';
-import { selectLogin } from 'lib/redux/login/loginSlice';
+import { ModalCtrl, Wrapper } from 'components/student';
+import {
+  fetchManagements,
+  fetchUserIds,
+  fetchWrongAnswers,
+} from 'lib/apis/user';
 import { ParsedUrlQuery } from 'querystring';
-import { fetchUserIds } from 'lib/apis/user';
+import { Container } from 'components/ui/Container';
 
-interface Props {}
+import { Management, Wrong } from 'types/user';
 
-const Student: NextPage<Props> = () => {
+interface Props {
+  wrongAnswerList: Wrong[];
+  managementList: Management[];
+}
+
+const Student: NextPage<Props> = ({
+  wrongAnswerList,
+  managementList,
+}: {
+  wrongAnswerList: Wrong[];
+  managementList: Management[];
+}) => {
   const { selectedGrade, selectedUserId, selectedUser, users } =
     useSelector(selectUser);
   const { login } = useSelector(selectLogin);
@@ -45,7 +61,12 @@ const Student: NextPage<Props> = () => {
     if (!login) {
       route.push(`${BASE_URL}/login`);
     }
-  }, []);
+  }, [login, selectedUserId]);
+
+  React.useEffect(() => {
+    dispatch(setWrongAnswerList(wrongAnswerList));
+    dispatch(setManagementList(managementList));
+  }, [wrongAnswerList]);
 
   return (
     <>
@@ -55,6 +76,7 @@ const Student: NextPage<Props> = () => {
         </title>
         <meta name="description" content="학생관리" />
       </Head>
+      {console.log('초기페이지')}
       <Container>
         <div className="flex justify-between sm:pt-20 sm:flex-row sm:pb-4 flex-col pt-20 pb-4 ">
           <div className="sm:block">
@@ -120,6 +142,7 @@ const Student: NextPage<Props> = () => {
         </div>
         <Wrapper></Wrapper>
       </Container>
+      <ModalCtrl />
     </>
   );
 };
@@ -145,7 +168,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { name } = context.params as IParams;
+
+  const wrongAnswerList = await fetchWrongAnswers(name);
+  const managementList = await fetchManagements(name);
+
   return {
-    props: {},
+    props: {
+      wrongAnswerList,
+      managementList,
+    },
   };
 };

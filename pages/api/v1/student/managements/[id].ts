@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { dbConnect } from 'lib/mongoDB/dbConnect';
-import Management from 'lib/mongoDB/models/Management';
+import { dbConnect } from 'backend/mongoDB/dbConnect';
+import Management from 'backend/mongoDB/models/Management';
+import User from 'backend/mongoDB/models/User';
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,10 +9,12 @@ export default async function handler(
 ) {
   await dbConnect();
 
-  const { studentName } = req.query;
+  const { id } = req.query;
 
   if (req.method === 'GET') {
-    Management.find({ studentName: studentName })
+    const user = await User.findOne({ _id: id });
+
+    Management.find({ studentName: user.name })
       .sort({ createdDate: -1 })
       .then((management: any) => {
         if (management) {

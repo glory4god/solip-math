@@ -3,27 +3,23 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import { Wrong, WrongAnswerType } from 'types/user';
 import { NEXT_SERVER } from 'config';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from 'lib/redux/user/userSlice';
 import { useRouter } from 'next/dist/client/router';
-import { fetchWrongAnswers } from 'lib/apis/user';
+import { openWriteModal } from 'lib/redux/modal/modalSlice';
 
 interface Props {}
 
 const WrongAnswerContainer: React.FC<Props> = ({}) => {
-  const { selectedUserId, selectedUser } = useSelector(selectUser);
-  const [wrongAnswerList, setWrongAnswerList] = React.useState<Wrong[]>();
-  const route = useRouter();
+  const { selectedUserId, selectedUser, wrongAnswerList } =
+    useSelector(selectUser);
+
+  const dispatch = useDispatch();
+
+  const router = useRouter();
   // 책에 따른 번호만 추가하는 상태
   const [addWrongReq, setAddWrongReq] = React.useState<WrongAnswerType>({
-    name: '',
-    book: '',
-    number: '',
-  });
-
-  // 책이름까지 설정해서 추가하는 상태
-  const [addNewWrongReq, setAddNewWrongReq] = React.useState<WrongAnswerType>({
-    name: '',
+    studentName: selectedUser,
     book: '',
     number: '',
   });
@@ -38,25 +34,11 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
       alert('저장에 실패했습니다.');
     } else {
       setAddWrongReq({
-        name: '',
+        studentName: selectedUser,
         book: '',
         number: '',
       });
       setInitialFetch();
-    }
-  };
-
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    if (name === 'book' || name === 'number') {
-      setAddNewWrongReq(() => ({
-        ...addNewWrongReq,
-        [name]: value,
-      }));
-    }
-    if (name === '') {
-    }
-    if (name === '') {
     }
   };
 
@@ -86,37 +68,26 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
         alert('삭제를 성공했습니다.');
       }
     }
-
     setInitialFetch();
   };
 
+  // FIXME: 페이지 초기화
   const setInitialFetch = async () => {
-    const books = await fetchWrongAnswers(selectedUserId);
+    router.replace(router.asPath);
     setAddWrongReq({
+      studentName: selectedUser,
       book: '',
       number: '',
-      name: selectedUser,
     });
-    setAddNewWrongReq({
-      book: '',
-      number: '',
-      name: selectedUser,
-    });
-    books.map((book, idx) => {
-      book.numbers.sort((a, b) => a.number.length - b.number.length);
-    });
-    setWrongAnswerList(books);
   };
-
-  React.useEffect(() => {
-    setInitialFetch();
-  }, [selectedUserId]);
 
   return (
     <>
       <div className=" my-2">오답관리</div>
       <div className="flex justify-end">
-        <Button>책추가</Button>
+        <Button onClick={() => dispatch(openWriteModal('wrong'))}>
+          책추가
+        </Button>
       </div>
       <table className="w-full">
         <colgroup>
@@ -208,51 +179,6 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
               </tr>
             );
           })}
-          <tr>
-            <th className="sm:px-8 px-1">
-              <input
-                className="w-full"
-                type="text"
-                name="book"
-                value={addNewWrongReq.book}
-                onChange={onChangeHandler}
-              />
-            </th>
-            <td className="px-8">
-              <input
-                className="w-full"
-                type="text"
-                value={addNewWrongReq.number}
-                name="number"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    if (addNewWrongReq.book === '') {
-                      alert('책을 입력하세요');
-                    } else if (addNewWrongReq.number === '') {
-                      alert('번호를 입력하세요');
-                    } else {
-                      postWrongAnswer(addNewWrongReq);
-                    }
-                  }
-                }}
-                onChange={onChangeHandler}
-              />
-            </td>
-            <td className="sm:px-8">
-              <Button
-                onClick={() => {
-                  if (addNewWrongReq.book === '') {
-                    alert('책을 입력하세요');
-                  } else if (addNewWrongReq.number === '') {
-                    alert('번호를 입력하세요');
-                  } else {
-                    postWrongAnswer(addNewWrongReq);
-                  }
-                }}>
-                추가
-              </Button>
-            </td>
-          </tr>
         </tbody>
       </table>
     </>

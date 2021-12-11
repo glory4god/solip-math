@@ -28,9 +28,9 @@ export async function fetchWrongAnswers(id: string) {
   )) as Wrong[];
 }
 
-export async function fetchManagements(studentNm: string) {
+export async function fetchManagements(id: string) {
   return (await fetcher(
-    `${NEXT_SERVER}/v1/student/managements/${studentNm}`,
+    `${NEXT_SERVER}/v1/student/managements/${id}`,
   )) as Management[];
 }
 export async function fetchClassManagements(grade: string) {

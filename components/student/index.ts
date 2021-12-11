@@ -5,3 +5,4 @@ export { default as GradeContainer } from './GradeContainer';
 
 export { default as DataInfoBox } from './DataInfoBox';
 export { default as DataInfoContent } from './DataInfoContent';
+export { default as ModalCtrl } from './ModalCtrl';

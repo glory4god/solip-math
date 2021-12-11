@@ -1,3 +1,5 @@
+import { ObjType } from 'types/common';
+
 export type UserEdit = {
   name: string;
   grade: '중1' | '중2' | '중3' | '고1' | '고2' | '고3' | '';
@@ -10,7 +12,7 @@ export interface User extends UserEdit {
 }
 
 export type WrongAnswerType = {
-  name: string;
+  studentName: string;
   book: string;
   number: string;
 };
@@ -38,4 +40,12 @@ interface Comment {
   author: string;
   content: string;
   createdDate: Date;
+}
+
+export interface PostGrade extends ObjType {
+  studentName: string;
+  date: string;
+  testName: string;
+  score: string;
+  comment: string;
 }
