@@ -7,12 +7,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from 'lib/redux/user/userSlice';
 import { useRouter } from 'next/dist/client/router';
 import { openWriteModal } from 'lib/redux/modal/modalSlice';
+import { fetchWrongAnswers } from 'lib/apis/user';
 
 interface Props {}
 
 const WrongAnswerContainer: React.FC<Props> = ({}) => {
-  const { selectedUserId, selectedUser, wrongAnswerList } =
-    useSelector(selectUser);
+  const {
+    selectedUserId,
+    selectedUser,
+    //  wrongAnswerList
+  } = useSelector(selectUser);
+  const [wrongAnswerList, setWrongAnswerList] = React.useState<Wrong[]>([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const dispatch = useDispatch();
 
@@ -73,7 +79,13 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
 
   // FIXME: 페이지 초기화 로직
   const setInitialFetch = async () => {
-    router.replace(router.asPath);
+    setIsLoading(true);
+    const books = await fetchWrongAnswers(selectedUserId);
+    books.map((book, idx) => {
+      book.numbers.sort((a, b) => a.number.length - b.number.length);
+    });
+    setWrongAnswerList(books);
+    setIsLoading(false);
     setAddWrongReq({
       studentName: selectedUser,
       book: '',
@@ -81,9 +93,12 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
     });
   };
 
+  React.useEffect(() => {
+    setInitialFetch();
+  }, [router.query, selectedUser]);
+
   return (
     <>
-      {console.log(router.asPath)}
       <div className=" my-2">오답관리</div>
       <div className="flex justify-end">
         <Button onClick={() => dispatch(openWriteModal('wrong'))}>
@@ -104,82 +119,98 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
           </tr>
         </thead>
         <tbody>
-          {wrongAnswerList?.map((wrongs, idx) => {
-            return (
-              <tr key={wrongs.book}>
-                <th>
-                  {wrongs.book}{' '}
-                  <a
-                    href="#"
-                    onClick={() => {
-                      let result = confirm(
-                        '책에 대한 오답을 전부 삭제하시겠습니까?',
-                      );
-                      if (result) {
-                        deleteWrongAnswer(selectedUserId, wrongs.book);
-                      } else {
-                      }
-                    }}
-                    className="text-xs text-red-300">
-                    책 지우기
-                  </a>
-                </th>
-                <td>
-                  {wrongs.numbers.map((arr, idx) => {
-                    return (
+          {isLoading ? (
+            <>
+              <tr>
+                <th className="sm:px-8 px-2">Loading ... </th>
+                <td className="px-4">Loading ...</td>
+                <td className="sm:px-8 flex py-4 justify-center sm:flex-row flex-col">
+                  Loading ...
+                </td>
+              </tr>
+            </>
+          ) : (
+            <>
+              {wrongAnswerList?.map((wrongs, idx) => {
+                return (
+                  <tr key={wrongs.book}>
+                    <th>
+                      {wrongs.book}{' '}
                       <a
                         href="#"
                         onClick={() => {
-                          deleteWrongAnswer(arr._id);
+                          let result = confirm(
+                            '책에 대한 오답을 전부 삭제하시겠습니까?',
+                          );
+                          if (result) {
+                            deleteWrongAnswer(selectedUserId, wrongs.book);
+                          } else {
+                          }
                         }}
-                        key={idx}>
-                        <b>{arr.number}</b> ,{' '}
+                        className="text-xs text-red-300">
+                        책 지우기
                       </a>
-                    );
-                  })}
-                </td>
-                <td className="flex py-4 sm:flex-row flex-col">
-                  <input
-                    className="w-full"
-                    name={wrongs.book}
-                    type="text"
-                    value={
-                      addWrongReq.book === wrongs.book ? addWrongReq.number : ''
-                    }
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        if (addWrongReq.number !== '') {
-                          postWrongAnswer(addWrongReq);
-                        } else {
-                          alert('번호를 입력하세요');
+                    </th>
+                    <td>
+                      {wrongs.numbers.map((arr, idx) => {
+                        return (
+                          <a
+                            href="#"
+                            onClick={() => {
+                              deleteWrongAnswer(arr._id);
+                            }}
+                            key={idx}>
+                            <b>{arr.number}</b> ,{' '}
+                          </a>
+                        );
+                      })}
+                    </td>
+                    <td className="flex py-4 sm:flex-row flex-col">
+                      <input
+                        className="w-full"
+                        name={wrongs.book}
+                        type="text"
+                        value={
+                          addWrongReq.book === wrongs.book
+                            ? addWrongReq.number
+                            : ''
                         }
-                      }
-                    }}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      const { name, value } = e.target;
-                      if (name === wrongs.book) {
-                        setAddWrongReq(() => ({
-                          ...addWrongReq,
-                          book: wrongs.book,
-                          number: value,
-                        }));
-                      }
-                    }}
-                  />
-                  <Button
-                    onClick={() => {
-                      if (addWrongReq.number !== '') {
-                        postWrongAnswer(addWrongReq);
-                      } else {
-                        alert('번호를 입력하세요');
-                      }
-                    }}>
-                    추가
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            if (addWrongReq.number !== '') {
+                              postWrongAnswer(addWrongReq);
+                            } else {
+                              alert('번호를 입력하세요');
+                            }
+                          }
+                        }}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const { name, value } = e.target;
+                          if (name === wrongs.book) {
+                            setAddWrongReq(() => ({
+                              ...addWrongReq,
+                              book: wrongs.book,
+                              number: value,
+                            }));
+                          }
+                        }}
+                      />
+                      <Button
+                        onClick={() => {
+                          if (addWrongReq.number !== '') {
+                            postWrongAnswer(addWrongReq);
+                          } else {
+                            alert('번호를 입력하세요');
+                          }
+                        }}>
+                        추가
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </>
+          )}
         </tbody>
       </table>
     </>

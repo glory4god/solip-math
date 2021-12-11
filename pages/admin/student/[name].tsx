@@ -14,33 +14,16 @@ import {
   setSelectedGrade,
   setSelectedUser,
   setSelectedUserId,
-  setWrongAnswerList,
-  setManagementList,
 } from 'lib/redux/user/userSlice';
 import { grades, studentMenu } from 'public/data';
 import { ModalCtrl, Wrapper } from 'components/student';
-import {
-  fetchManagements,
-  fetchUserIds,
-  fetchWrongAnswers,
-} from 'lib/apis/user';
+import { fetchUserIds } from 'lib/apis/user';
 import { ParsedUrlQuery } from 'querystring';
 import { Container } from 'components/ui/Container';
 
-import { Management, Wrong } from 'types/user';
+interface Props {}
 
-interface Props {
-  wrongAnswerList: Wrong[];
-  managementList: Management[];
-}
-
-const Student: NextPage<Props> = ({
-  wrongAnswerList,
-  managementList,
-}: {
-  wrongAnswerList: Wrong[];
-  managementList: Management[];
-}) => {
+const Student: NextPage<Props> = ({}: {}) => {
   const { selectedGrade, selectedUserId, selectedUser, users } =
     useSelector(selectUser);
   const { login } = useSelector(selectLogin);
@@ -62,11 +45,6 @@ const Student: NextPage<Props> = ({
       route.push(`${BASE_URL}/login`);
     }
   }, [login, selectedUserId]);
-
-  React.useEffect(() => {
-    dispatch(setWrongAnswerList(wrongAnswerList));
-    dispatch(setManagementList(managementList));
-  }, [wrongAnswerList, managementList, dispatch]);
 
   return (
     <>
@@ -168,13 +146,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const { name } = context.params as IParams;
 
-  const wrongAnswerList = await fetchWrongAnswers(name);
-  const managementList = await fetchManagements(name);
-
   return {
-    props: {
-      wrongAnswerList,
-      managementList,
-    },
+    props: {},
   };
 };
