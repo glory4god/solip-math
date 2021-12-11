@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { dbConnect } from 'lib/mongoDB/dbConnect';
-import User from 'lib/mongoDB/models/User';
-import WrongAnswer from 'lib/mongoDB/models/WrongAnswer';
-import Management from 'lib/mongoDB/models/Management';
+import { dbConnect } from 'backend/mongoDB/dbConnect';
+import User from 'backend/mongoDB/models/User';
+import WrongAnswer from 'backend/mongoDB/models/WrongAnswer';
+import Management from 'backend/mongoDB/models/Management';
 
 type Post = {
   name: string;

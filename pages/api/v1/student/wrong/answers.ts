@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { dbConnect } from 'lib/mongoDB/dbConnect';
-import WrongAnswer from 'lib/mongoDB/models/WrongAnswer';
-import User from 'lib/mongoDB/models/User';
+import { dbConnect } from 'backend/mongoDB/dbConnect';
+import WrongAnswer from 'backend/mongoDB/models/WrongAnswer';
+import User from 'backend/mongoDB/models/User';
 
 type WrongAnswerType = {
-  name: string;
+  studentName: string;
   book: string;
   number: string;
 };
@@ -21,7 +21,7 @@ export default async function handler(
 
     WrongAnswer.aggregate(
       [
-        { $match: { name: user.name } },
+        { $match: { studentName: user.name } },
         { $sort: { number: 1 } },
         { $group: { _id: '$book', numbers: { $push: '$$ROOT' } } },
         {
@@ -44,12 +44,14 @@ export default async function handler(
   } else if (req.method === 'POST') {
     const wrong: WrongAnswerType = req.body;
 
-    if (wrong.name === '') {
-      return res.status(400).json({ status: 400, message: 'name is empty' });
+    if (wrong.studentName === '') {
+      return res
+        .status(400)
+        .json({ status: 400, message: 'studentName is empty' });
     }
     if (wrong) {
       var answer = new WrongAnswer({
-        name: wrong.name,
+        studentName: wrong.studentName,
         book: wrong.book,
         number: wrong.number,
       });
@@ -84,7 +86,7 @@ export default async function handler(
       const user = await User.findOne({ _id: id });
 
       WrongAnswer.deleteMany(
-        { name: user.name, book: book },
+        { studentName: user.name, book: book },
         (err: any, data: any) => {
           if (err) {
             return res
