@@ -1,0 +1,41 @@
+/* basic modal */
+.outerContainer_2 {
+  position: fixed;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: black;
+  opacity: 50%;
+  z-index: 100;
+}
+
+.innerContainer_2 {
+  position: absolute;
+  width: 360px;
+  padding: 1rem;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 15px;
+  z-index: 105;
+}
+
+.inputWrapper {
+  text-align: left; 
+}
+
+
+.inputWrapper > div {
+  display : flex;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  justify-content: space-between;
+  
+}
+.inputWrapper > div > span {
+  font-size: 14px;
+  font-weight: bold;
+}

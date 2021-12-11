@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import { ThunkAction } from 'redux-thunk';
 import loginSlice from './login/loginSlice';
+import modalSlice from './modal/modalSlice';
 
 import userSlice from './user/userSlice';
 
@@ -20,6 +21,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userSlice,
   login: loginSlice,
+  modal: modalSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
