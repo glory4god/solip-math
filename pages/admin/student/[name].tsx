@@ -77,6 +77,8 @@ const Student: NextPage<Props> = ({
         <meta name="description" content="학생관리" />
       </Head>
       {console.log('초기페이지')}
+      {console.log(managementList)}
+      {console.log(wrongAnswerList)}
       <Container>
         <div className="flex justify-between sm:pt-20 sm:flex-row sm:pb-4 flex-col pt-20 pb-4 ">
           <div className="sm:block">
