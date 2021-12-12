@@ -5,20 +5,22 @@ import { useRouter } from 'next/dist/client/router';
 import { useDispatch, useSelector } from 'react-redux';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
-import { selectLogin } from 'lib/redux/login/loginSlice';
-import { BASE_URL } from 'config';
-
-import Button from '@material-ui/core/Button';
 import {
   selectUser,
   setSelectedGrade,
   setSelectedUser,
   setSelectedUserId,
 } from 'lib/redux/user/userSlice';
+import { selectLogin } from 'lib/redux/login/loginSlice';
+
+import { BASE_URL } from 'config';
+
+import Button from '@material-ui/core/Button';
 import { studentMenu } from 'public/data';
-import { ModalCtrl, Wrapper } from 'components/student';
+
 import { fetchGradeList, fetchUserIds } from 'lib/apis/user';
 import { ParsedUrlQuery } from 'querystring';
+import { ModalCtrl, Wrapper } from 'components/student';
 import { Container } from 'components/ui/Container';
 
 interface Props {
@@ -147,6 +149,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const { name } = context.params as IParams;
   const grades = await fetchGradeList();
+  if (!grades) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
   return {
     props: {
       grades: grades.map((g) => {

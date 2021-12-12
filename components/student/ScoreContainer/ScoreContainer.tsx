@@ -1,11 +1,14 @@
-import Button from '@material-ui/core/Button';
-import { NEXT_SERVER } from 'config';
-import { fetchScoreManagements } from 'lib/apis/user';
-import { stringToHTMLFormatting } from 'lib/common';
-import { openWriteModal, selectModal } from 'lib/redux/modal/modalSlice';
-import { selectUser } from 'lib/redux/user/userSlice';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { NEXT_SERVER } from 'config';
+
+import { openWriteModal, selectModal } from 'lib/redux/modal/modalSlice';
+import { selectUser } from 'lib/redux/user/userSlice';
+import { fetchScoreManagements } from 'lib/apis/user';
+import { stringToHTMLFormatting } from 'lib/common';
+
+import Button from '@material-ui/core/Button';
 import { ScoreManagement } from 'types/user';
 
 interface Props {}
