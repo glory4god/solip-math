@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export interface ManagementProps {
+export interface StudentManagementProps {
   author: string;
   studentName: string;
   content: string;
@@ -14,7 +14,7 @@ type Comment = {
   createdDate: Date;
 };
 
-const ManagementSchema = new mongoose.Schema<ManagementProps>(
+const StudentManagementSchema = new mongoose.Schema<StudentManagementProps>(
   {
     author: {
       type: String,
@@ -42,5 +42,9 @@ const ManagementSchema = new mongoose.Schema<ManagementProps>(
   },
 );
 
-export default mongoose.models.Management ||
-  mongoose.model('Management', ManagementSchema, 'managements');
+export default mongoose.models.StudentManagement ||
+  mongoose.model(
+    'StudentManagement',
+    StudentManagementSchema,
+    'studentManagements',
+  );

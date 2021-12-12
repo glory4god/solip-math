@@ -64,7 +64,7 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
     router.replace(router.asPath);
   };
 
-  const postManagementHandler = async () => {
+  const postStdManagementHandler = async () => {
     const { studentName, author, content } = postManagement;
     if (studentName === '' || author === '' || content === '') {
       return alert('빈칸없이 입력해주세요.');
@@ -85,6 +85,38 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
     }
 
     dispatch(closeWriteModal('management'));
+    router.replace(router.asPath);
+  };
+
+  const postGradeManagementHandler = async () => {
+    const { studentName, date, testName, score, comment } = postGrade;
+    if (
+      studentName === '' ||
+      date === '' ||
+      testName === '' ||
+      score === '' ||
+      comment === ''
+    ) {
+      return alert('빈칸없이 입력해주세요.');
+    }
+    const res = await fetch(`${NEXT_SERVER}/v1/student/score/post`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(postGrade),
+    });
+    if (!res.ok) {
+      alert('저장에 실패했습니다.');
+    } else {
+      setPostGrade({
+        studentName: selectedUser,
+        testName: '',
+        date: '',
+        score: '',
+        comment: '',
+      });
+    }
+
+    dispatch(closeWriteModal('grade'));
     router.replace(router.asPath);
   };
 
@@ -112,11 +144,11 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
 
   return (
     <>
-      {showGradeWriteModal && (
+      {showWrongWriteModal && (
         <WriteModal
-          title={'성적추가'}
-          modalNm={'grade'}
-          valueData={postGrade}
+          title={'책추가'}
+          modalNm={'wrong'}
+          valueData={postAddBook}
           onChange={postOnChange}
           postHandler={postAddBookHandler}
         />
@@ -127,16 +159,16 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
           modalNm={'management'}
           valueData={postManagement}
           onChange={postOnChange}
-          postHandler={postManagementHandler}
+          postHandler={postStdManagementHandler}
         />
       )}
-      {showWrongWriteModal && (
+      {showGradeWriteModal && (
         <WriteModal
-          title={'책추가'}
-          modalNm={'wrong'}
-          valueData={postAddBook}
+          title={'성적추가'}
+          modalNm={'grade'}
+          valueData={postGrade}
           onChange={postOnChange}
-          postHandler={postAddBookHandler}
+          postHandler={postGradeManagementHandler}
         />
       )}
     </>

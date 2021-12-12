@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { dbConnect } from 'backend/mongoDB/dbConnect';
-import StudentManagement from 'backend/mongoDB/models/StudentManagement';
+import GradeManagement from 'backend/mongoDB/models/GradeManagement';
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,7 +11,7 @@ export default async function handler(
   const { studentName } = req.query;
 
   if (req.method === 'GET') {
-    StudentManagement.find({ studentName: studentName })
+    GradeManagement.find({ studentName: studentName })
       .sort({ createdDate: -1 })
       .then((management: any) => {
         if (management) {
@@ -22,9 +22,10 @@ export default async function handler(
       });
   } else if (req.method === 'POST') {
     const postManagement = req.body;
-    var management = new StudentManagement(postManagement);
+    console.log(postManagement);
+    let management = new GradeManagement(postManagement);
     management.createdDate = new Date();
-
+    console.log(management);
     management.save((err: any) => {
       if (err) {
         return res.status(400).json({ status: 400, message: 'save failed' });

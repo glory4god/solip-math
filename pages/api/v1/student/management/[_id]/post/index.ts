@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { dbConnect } from 'backend/mongoDB/dbConnect';
-import Management from 'backend/mongoDB/models/Management';
+import Management from 'backend/mongoDB/models/StudentManagement';
 
 export default async function handler(
   req: NextApiRequest,

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { dbConnect } from 'backend/mongoDB/dbConnect';
 import User from 'backend/mongoDB/models/User';
 import WrongAnswer from 'backend/mongoDB/models/WrongAnswer';
-import Management from 'backend/mongoDB/models/Management';
+import Management from 'backend/mongoDB/models/StudentManagement';
 
 type Post = {
   name: string;
