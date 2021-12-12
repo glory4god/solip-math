@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 
 interface ModalSliceProps {
-  showGradeWriteModal: boolean;
+  showScoreWriteModal: boolean;
   showWrongWriteModal: boolean;
   showManagementWriteModal: boolean;
 }
 
 const initialState: ModalSliceProps = {
-  showGradeWriteModal: false,
+  showScoreWriteModal: false,
   showWrongWriteModal: false,
   showManagementWriteModal: false,
 };
@@ -17,8 +17,8 @@ export const modalSlice = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    SET_SHOW_GRADE_WRITE_MODAL: (state, action: PayloadAction<boolean>) => {
-      state.showGradeWriteModal = action.payload;
+    SET_SHOW_SCORE_WRITE_MODAL: (state, action: PayloadAction<boolean>) => {
+      state.showScoreWriteModal = action.payload;
     },
     SET_SHOW_WRONG_WRITE_MODAL: (state, action: PayloadAction<boolean>) => {
       state.showWrongWriteModal = action.payload;
@@ -33,7 +33,7 @@ export const modalSlice = createSlice({
 });
 
 export const {
-  SET_SHOW_GRADE_WRITE_MODAL,
+  SET_SHOW_SCORE_WRITE_MODAL,
   SET_SHOW_WRONG_WRITE_MODAL,
   SET_SHOW_MANAGEMENT_WRITE_MODAL,
 } = modalSlice.actions;
@@ -44,8 +44,8 @@ export default modalSlice.reducer;
 
 export function openWriteModal(modalName: string) {
   return (dispatch: any) => {
-    if (modalName === 'grade') {
-      dispatch(SET_SHOW_GRADE_WRITE_MODAL(true));
+    if (modalName === 'score') {
+      dispatch(SET_SHOW_SCORE_WRITE_MODAL(true));
     } else if (modalName === 'wrong') {
       dispatch(SET_SHOW_WRONG_WRITE_MODAL(true));
     } else if (modalName === 'management') {
@@ -56,8 +56,8 @@ export function openWriteModal(modalName: string) {
 
 export function closeWriteModal(modalName: string) {
   return (dispatch: any) => {
-    if (modalName === 'grade') {
-      dispatch(SET_SHOW_GRADE_WRITE_MODAL(false));
+    if (modalName === 'score') {
+      dispatch(SET_SHOW_SCORE_WRITE_MODAL(false));
     } else if (modalName === 'wrong') {
       dispatch(SET_SHOW_WRONG_WRITE_MODAL(false));
     } else if (modalName === 'management') {

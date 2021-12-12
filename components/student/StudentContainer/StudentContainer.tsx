@@ -3,12 +3,12 @@ import { NEXT_SERVER } from 'config';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { selectUser } from 'lib/redux/user/userSlice';
-import { mongoDateFormatting } from 'lib/common';
+import { mongoDateFormatting, stringToHTMLFormatting } from 'lib/common';
 import { openWriteModal, selectModal } from 'lib/redux/modal/modalSlice';
 
 import Button from '@material-ui/core/Button';
 import { fetchManagements } from 'lib/apis/user';
-import { Management } from 'types/user';
+import { StudentManagement } from 'types/user';
 
 interface Props {}
 
@@ -18,14 +18,16 @@ type PostManagement = {
   content: string;
 };
 
-const ManagementContainer: React.FC<Props> = ({}) => {
+const StudentContainer: React.FC<Props> = ({}) => {
   const { selectedUserId, selectedUser } = useSelector(selectUser);
   const { showManagementWriteModal } = useSelector(selectModal);
 
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [managementList, setManagementList] = React.useState<Management[]>([]);
+  const [managementList, setManagementList] = React.useState<
+    StudentManagement[]
+  >([]);
 
   const [editId, setEditId] = React.useState<string>('');
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
@@ -46,7 +48,7 @@ const ManagementContainer: React.FC<Props> = ({}) => {
   };
 
   const deleteManagement = async (id: string) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/student/management/${id}/post`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/management/student/${id}/post`, {
       method: 'DELETE',
     });
     if (!res.ok) {
@@ -58,7 +60,7 @@ const ManagementContainer: React.FC<Props> = ({}) => {
   };
 
   const patchManagement = async (id: string, postData: PostManagement) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/student/management/${id}/post`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/management/student/${id}/post`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(postData),
@@ -178,18 +180,12 @@ const ManagementContainer: React.FC<Props> = ({}) => {
                             {mongoDateFormatting(management.createdDate)}
                           </span>
                         </th>
-                        <td className="text-left p-4">
-                          {management.content
-                            .split('\n')
-                            .map((content: string, idx) => {
-                              return (
-                                <span key={idx}>
-                                  {content}
-                                  <br />
-                                </span>
-                              );
-                            })}
-                        </td>
+                        <td
+                          className="text-left p-4"
+                          dangerouslySetInnerHTML={stringToHTMLFormatting(
+                            management.content,
+                          )}
+                        />
                         <td className="flex py-4 justify-center sm:flex-row flex-col">
                           <Button
                             onClick={() => {
@@ -226,4 +222,4 @@ const ManagementContainer: React.FC<Props> = ({}) => {
   );
 };
 
-export default ManagementContainer;
+export default StudentContainer;

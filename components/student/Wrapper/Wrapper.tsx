@@ -4,9 +4,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import {
   WrongAnswerContainer,
-  ManagementContainer,
+  StudentContainer,
   DataInfoBox,
-  GradeContainer,
+  ScoreContainer,
 } from '..';
 
 interface Props {}
@@ -27,8 +27,8 @@ const Wrapper: React.FC<Props> = () => {
             <DataInfoBox title={`${selectedGrade} 오답 TOP 5`} />
           </div> */
       }
-      {pages === '2' && <ManagementContainer />}
-      {pages === '3' && <GradeContainer />}
+      {pages === '2' && <StudentContainer />}
+      {pages === '3' && <ScoreContainer />}
     </div>
   );
 };

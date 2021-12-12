@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Paper from '@material-ui/core/Paper';
-import { Management } from 'types/user';
+import { StudentManagement } from 'types/user';
 import Button from '@material-ui/core/Button';
 import { fetchClassManagements } from 'lib/apis/user';
 import { useSelector } from 'react-redux';

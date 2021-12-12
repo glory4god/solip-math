@@ -27,7 +27,7 @@ export type idAndNumber = {
   number: string;
 };
 
-export type Management = {
+export type StudentManagement = {
   _id: string;
   author: string;
   studentName: string;
@@ -36,13 +36,17 @@ export type Management = {
   createdDate: Date;
 };
 
+export interface ScoreManagement extends PostScore {
+  _id: string;
+}
+
 interface Comment {
   author: string;
   content: string;
   createdDate: Date;
 }
 
-export interface PostGrade extends ObjType {
+export interface PostScore extends ObjType {
   studentName: string;
   date: string;
   testName: string;

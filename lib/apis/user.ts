@@ -1,6 +1,6 @@
 import { NEXT_SERVER } from 'config';
 import { ClassManagement } from 'types/class';
-import { Wrong, User, Management } from 'types/user';
+import { Wrong, User, StudentManagement, ScoreManagement } from 'types/user';
 import fetcher from './fetcher';
 
 export async function fetchUserList() {
@@ -24,17 +24,23 @@ export async function fetchUser(id: string) {
 
 export async function fetchWrongAnswers(id: string) {
   return (await fetcher(
-    `${NEXT_SERVER}/v1/student/wrong/answers?id=${id}`,
+    `${NEXT_SERVER}/v1/management/wrong/answers?id=${id}`,
   )) as Wrong[];
 }
 
 export async function fetchManagements(id: string) {
   return (await fetcher(
-    `${NEXT_SERVER}/v1/student/managements/${id}`,
-  )) as Management[];
+    `${NEXT_SERVER}/v1/managements/student/${id}`,
+  )) as StudentManagement[];
 }
 export async function fetchClassManagements(grade: string) {
   return (await fetcher(
-    `${NEXT_SERVER}/v1/class/managements/${grade}`,
+    `${NEXT_SERVER}/v1/managements/class/${grade}`,
   )) as ClassManagement[];
+}
+
+export async function fetchScoreManagements(id: string) {
+  return (await fetcher(
+    `${NEXT_SERVER}/v1/managements/score/${id}`,
+  )) as ScoreManagement[];
 }

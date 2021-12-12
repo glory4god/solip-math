@@ -28,7 +28,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
   });
 
   const postWrongAnswer = async (postData: WrongAnswerType) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/student/wrong/answers`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/management/wrong/answers`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(postData),
@@ -48,7 +48,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
   const deleteWrongAnswer = async (id: string, book: string = '') => {
     if (book === '') {
       const res = await fetch(
-        `${NEXT_SERVER}/v1/student/wrong/answers?id=${id}`,
+        `${NEXT_SERVER}/v1/management/wrong/answers?id=${id}`,
         {
           method: 'DELETE',
         },
@@ -60,7 +60,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
       }
     } else {
       const res = await fetch(
-        `${NEXT_SERVER}/v1/student/wrong/answers?id=${id}&book=${book}`,
+        `${NEXT_SERVER}/v1/management/wrong/answers?id=${id}&book=${book}`,
         {
           method: 'DELETE',
         },

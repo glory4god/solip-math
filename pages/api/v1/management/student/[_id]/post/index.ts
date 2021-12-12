@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { dbConnect } from 'backend/mongoDB/dbConnect';
-import Management from 'backend/mongoDB/models/StudentManagement';
+import StudentManagement from 'backend/mongoDB/models/StudentManagement';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,10 +12,10 @@ export default async function handler(
 
   if (req.method === 'PATCH') {
     const postManagement = req.body;
-    var management = new Management(postManagement);
+    var management = new StudentManagement(postManagement);
     management.createdDate = new Date();
 
-    Management.findByIdAndUpdate(
+    StudentManagement.findByIdAndUpdate(
       _id,
       {
         $set: {
@@ -33,7 +33,7 @@ export default async function handler(
       },
     );
   } else if (req.method === 'DELETE') {
-    Management.findByIdAndDelete(_id, (err: any) => {
+    StudentManagement.findByIdAndDelete(_id, (err: any) => {
       if (err) {
         return res.status(400).json({ status: 400, message: 'delete failed' });
       } else {

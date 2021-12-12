@@ -8,7 +8,7 @@ import { NEXT_SERVER } from 'config';
 
 import WriteModal from 'components/ui/Modal/WriteModal';
 
-import { PostGrade, WrongAnswerType } from 'types/user';
+import { PostScore, WrongAnswerType } from 'types/user';
 
 type PostManagement = {
   author: string;
@@ -19,13 +19,13 @@ type PostManagement = {
 interface ModalCtrlProp {}
 
 const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
-  const { showGradeWriteModal, showWrongWriteModal, showManagementWriteModal } =
+  const { showScoreWriteModal, showWrongWriteModal, showManagementWriteModal } =
     useSelector(selectModal);
   const { selectedUser } = useSelector(selectUser);
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [postGrade, setPostGrade] = React.useState<PostGrade>({
+  const [postScore, setPostScore] = React.useState<PostScore>({
     studentName: selectedUser,
     date: '',
     testName: '',
@@ -46,19 +46,20 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
   });
 
   const postAddBookHandler = async () => {
-    const res = await fetch(`${NEXT_SERVER}/v1/student/wrong/answers`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/management/wrong/answers`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(postAddBook),
     });
     if (!res.ok) {
-      alert('저장에 실패했습니다.');
+      return alert('저장에 실패했습니다.');
     } else {
       setPostAddBook({
         studentName: selectedUser,
         book: '',
         number: '',
       });
+      alert('책을 추가했습니다');
     }
     dispatch(closeWriteModal('wrong'));
     router.replace(router.asPath);
@@ -69,27 +70,28 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
     if (studentName === '' || author === '' || content === '') {
       return alert('빈칸없이 입력해주세요.');
     }
-    const res = await fetch(`${NEXT_SERVER}/v1/student/management/post`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/management/student/post`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(postManagement),
     });
     if (!res.ok) {
-      alert('저장에 실패했습니다.');
+      return alert('저장에 실패했습니다.');
     } else {
       setPostManagement({
         author: '',
         studentName: selectedUser,
         content: '',
       });
+      alert('글이 작성됐습니다.');
     }
 
     dispatch(closeWriteModal('management'));
     router.replace(router.asPath);
   };
 
-  const postGradeManagementHandler = async () => {
-    const { studentName, date, testName, score, comment } = postGrade;
+  const postScoreManagementHandler = async () => {
+    const { studentName, date, testName, score, comment } = postScore;
     if (
       studentName === '' ||
       date === '' ||
@@ -99,24 +101,25 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
     ) {
       return alert('빈칸없이 입력해주세요.');
     }
-    const res = await fetch(`${NEXT_SERVER}/v1/student/score/post`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/management/score/post`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(postGrade),
+      body: JSON.stringify(postScore),
     });
     if (!res.ok) {
-      alert('저장에 실패했습니다.');
+      return alert('저장에 실패했습니다.');
     } else {
-      setPostGrade({
+      setPostScore({
         studentName: selectedUser,
         testName: '',
         date: '',
         score: '',
         comment: '',
       });
+      alert('성적이 입력됐습니다');
     }
 
-    dispatch(closeWriteModal('grade'));
+    dispatch(closeWriteModal('score'));
     router.replace(router.asPath);
   };
 
@@ -124,9 +127,9 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    if (Object.keys(postGrade).includes(e.target.name)) {
-      setPostGrade(() => ({
-        ...postGrade,
+    if (Object.keys(postScore).includes(e.target.name)) {
+      setPostScore(() => ({
+        ...postScore,
         [name]: value,
       }));
     } else if (Object.keys(postAddBook).includes(e.target.name)) {
@@ -162,13 +165,13 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
           postHandler={postStdManagementHandler}
         />
       )}
-      {showGradeWriteModal && (
+      {showScoreWriteModal && (
         <WriteModal
           title={'성적추가'}
-          modalNm={'grade'}
-          valueData={postGrade}
+          modalNm={'score'}
+          valueData={postScore}
           onChange={postOnChange}
-          postHandler={postGradeManagementHandler}
+          postHandler={postScoreManagementHandler}
         />
       )}
     </>

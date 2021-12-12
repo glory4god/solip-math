@@ -1,14 +1,13 @@
 import mongoose from 'mongoose';
 
-export interface GradeManagementProps {
+export interface ScoreManagementProps {
   studentName: string;
   date: string;
   testName: string;
   score: string;
   comment: string;
-  createdDate: Date;
 }
-const GradeManagementSchema = new mongoose.Schema<GradeManagementProps>(
+const ScoreManagementSchema = new mongoose.Schema<ScoreManagementProps>(
   {
     studentName: {
       type: String,
@@ -30,15 +29,11 @@ const GradeManagementSchema = new mongoose.Schema<GradeManagementProps>(
       type: String,
       unique: false,
     },
-    createdDate: {
-      type: Date,
-      unique: false,
-    },
   },
   {
     versionKey: false,
   },
 );
 
-export default mongoose.models.GradeManagement ||
-  mongoose.model('GradeManagement', GradeManagementSchema, 'gradeManagements');
+export default mongoose.models.ScoreManagement ||
+  mongoose.model('ScoreManagement', ScoreManagementSchema, 'scoreManagements');
