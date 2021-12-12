@@ -19,28 +19,28 @@ export default async function handler(
   if (req.method === 'GET') {
     const user = await User.findOne({ _id: id });
 
-    WrongAnswer.aggregate(
-      [
-        { $match: { studentName: user.name } },
-        { $sort: { number: 1 } },
-        { $group: { _id: '$book', numbers: { $push: '$$ROOT' } } },
-        {
-          $project: {
-            book: '$_id',
-            _id: 0,
-            numbers: { _id: 1, number: 1 },
-          },
-        },
-        { $sort: { book: 1 } },
-      ],
-      (err: any, data: any) => {
-        if (data) {
-          return res.status(200).json(data);
-        } else {
-          return res.status(400).json({ status: 400, message: 'get failed' });
-        }
-      },
-    );
+    // WrongAnswer.aggregate(
+    //   [
+    //     { $match: { studentName: user.name } },
+    //     { $sort: { number: 1 } },
+    //     { $group: { _id: '$book', numbers: { $push: '$$ROOT' } } },
+    //     {
+    //       $project: {
+    //         book: '$_id',
+    //         _id: 0,
+    //         numbers: { _id: 1, number: 1 },
+    //       },
+    //     },
+    //     { $sort: { book: 1 } },
+    //   ],
+    //   (err: any, data: any) => {
+    //     if (data) {
+    //       return res.status(200).json(data);
+    //     } else {
+    //       return res.status(400).json({ status: 400, message: 'get failed' });
+    //     }
+    //   },
+    // );
   } else if (req.method === 'POST') {
     const wrong: WrongAnswerType = req.body;
 
