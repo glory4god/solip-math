@@ -15,15 +15,17 @@ import {
   setSelectedUser,
   setSelectedUserId,
 } from 'lib/redux/user/userSlice';
-import { grades, studentMenu } from 'public/data';
+import { studentMenu } from 'public/data';
 import { ModalCtrl, Wrapper } from 'components/student';
-import { fetchUserIds } from 'lib/apis/user';
+import { fetchGradeList, fetchUserIds } from 'lib/apis/user';
 import { ParsedUrlQuery } from 'querystring';
 import { Container } from 'components/ui/Container';
 
-interface Props {}
+interface Props {
+  grades: string[];
+}
 
-const Student: NextPage<Props> = ({}: {}) => {
+const Student: NextPage<Props> = ({ grades }) => {
   const { selectedGrade, selectedUserId, selectedUser, users } =
     useSelector(selectUser);
   const { login } = useSelector(selectLogin);
@@ -57,7 +59,6 @@ const Student: NextPage<Props> = ({}: {}) => {
       <Container>
         <div className="flex justify-between sm:pt-20 sm:flex-row sm:pb-4 flex-col pt-20 pb-4 ">
           <div className="sm:block">
-            <span className="text-xl">학생선택 </span>
             <select
               className="w-16"
               value={selectedGrade}
@@ -145,8 +146,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { name } = context.params as IParams;
-
+  const grades = await fetchGradeList();
   return {
-    props: {},
+    props: {
+      grades: grades.map((g) => {
+        return g.grade;
+      }),
+    },
   };
 };

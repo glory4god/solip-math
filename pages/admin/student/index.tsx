@@ -14,14 +14,14 @@ import {
 import { Container } from 'components/ui/Container';
 
 import { User } from 'types/user';
-import { fetchUserList } from 'lib/apis/user';
-import { grades } from 'public/data';
+import { fetchGradeList, fetchUserList } from 'lib/apis/user';
 
 interface Props {
   userList: User[];
+  grades: string[];
 }
 
-const Main: NextPage<Props> = ({ userList }: { userList: User[] }) => {
+const Main: NextPage<Props> = ({ userList, grades }) => {
   const { selectedGrade, selectedUserId, users } = useSelector(selectUser);
   const dispatch = useDispatch();
   const route = useRouter();
@@ -43,7 +43,6 @@ const Main: NextPage<Props> = ({ userList }: { userList: User[] }) => {
       <Container>
         <h2 className="pt-20 pb-4 text-2xl">솔잎샘 학생관리 시스템</h2>
         <div className="pt-4 ">
-          <span className="text-xl">학생선택</span>
           <select
             className="w-16"
             value={selectedGrade}
@@ -85,8 +84,12 @@ const Main: NextPage<Props> = ({ userList }: { userList: User[] }) => {
 export default Main;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const grades = await fetchGradeList();
   return {
     props: {
+      grades: grades.map((g) => {
+        return g.grade;
+      }),
       userList: (await fetchUserList()) as User[],
     },
   };
