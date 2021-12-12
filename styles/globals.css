@@ -27,3 +27,31 @@ input {
 textarea {
   border : 1px solid black;
 }
+
+
+/* default 세팅 */
+table > tbody > tr > th {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-size: 14px;
+
+}
+table > tbody > tr > th > a {
+  font-size: 12px;
+  color: rgba(252, 165, 165);
+}
+table > tbody > tr > td{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-size: 14px;
+}
+
+/* 스크롤바 없앰 기능 추가 */
+.removeScroll {
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.removeScroll::-webkit-scrollbar{
+  display: none;
+}
