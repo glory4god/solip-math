@@ -1,10 +1,20 @@
 import { NEXT_SERVER } from 'config';
 import { ClassManagement } from 'types/class';
-import { Wrong, User, StudentManagement, ScoreManagement } from 'types/user';
+import {
+  Wrong,
+  User,
+  StudentManagement,
+  ScoreManagement,
+  Grade,
+} from 'types/user';
 import fetcher from './fetcher';
 
 export async function fetchUserList() {
   return (await fetcher(`${NEXT_SERVER}/v1/users?auth=true`)) as User[];
+}
+
+export async function fetchGradeList() {
+  return (await fetcher(`${NEXT_SERVER}/v1/grades`)) as Grade[];
 }
 
 export async function fetchUserIds() {
