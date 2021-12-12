@@ -49,20 +49,20 @@ export default async function handler(
     });
   } else if (req.method === 'PATCH') {
     const { userId } = req.query;
-    User.findByIdAndUpdate(
-      userId,
-      { $set: { grade: id } },
-      (err: any, user: any) => {
-        if (err) {
-          return res
-            .status(400)
-            .json({ status: 400, message: 'update failed' });
-        } else {
-          return res
-            .status(200)
-            .json({ status: 200, message: 'update success' });
-        }
-      },
-    );
+    // User.findByIdAndUpdate(
+    //   userId,
+    //   { $set: { grade: id } },
+    //   (err: any, user: any) => {
+    //     if (err) {
+    //       return res
+    //         .status(400)
+    //         .json({ status: 400, message: 'update failed' });
+    //     } else {
+    //       return res
+    //         .status(200)
+    //         .json({ status: 200, message: 'update success' });
+    //     }
+    //   },
+    // );
   }
 }

@@ -73,12 +73,18 @@ export default async function handler(
       }
     });
   } else if (req.method === 'PATCH') {
-    User.findByIdAndUpdate(id, { $set: { auth: false } }, (err) => {
-      if (err) {
-        return res.status(400).json({ status: 400, message: '수정 실패' });
-      } else {
-        return res.status(200).json({ status: 200, message: '수정 성공' });
-      }
+    User.findById(id, (err: any, user: any) => {
+      // User.findByIdAndUpdate(
+      //   id,
+      //   { $set: { auth: user.auth ? false : true } },
+      //   (err) => {
+      //     if (err) {
+      //       return res.status(400).json({ status: 400, message: '수정 실패' });
+      //     } else {
+      //       return res.status(200).json({ status: 200, message: '수정 성공' });
+      //     }
+      //   },
+      // );
     });
   }
 }
