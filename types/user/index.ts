@@ -11,6 +11,11 @@ export interface User extends UserEdit {
   createdDate: Date;
 }
 
+export interface Grade {
+  _id: string;
+  grade: string;
+}
+
 export type WrongAnswerType = {
   studentName: string;
   book: string;

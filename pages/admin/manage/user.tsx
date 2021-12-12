@@ -2,27 +2,32 @@ import type { GetServerSideProps, NextPage } from 'next';
 import React from 'react';
 import Head from 'next/head';
 import { Container } from 'components/ui/Container';
-import { grades, profileEditMap } from 'public/data';
+import { EditMap, gradeEditMap, profileEditMap } from 'public/data';
 import Button from '@material-ui/core/Button';
 import { NEXT_SERVER } from 'config';
-import { User, UserEdit } from 'types/user';
+import { Grade, User, UserEdit } from 'types/user';
 import { useSelector } from 'react-redux';
 import { selectLogin } from 'lib/redux/login/loginSlice';
 import { useRouter } from 'next/dist/client/router';
-import { fetchExceptUserList, fetchUserList } from 'lib/apis/user';
+import {
+  fetchExceptUserList,
+  fetchGradeList,
+  fetchUserList,
+} from 'lib/apis/user';
 import { UserContent } from 'components/manage';
 
 interface Props {
   userList: User[];
   exceptUserList: User[];
+  profileEdits: EditMap[];
+  grades: string[];
 }
 
 const User: NextPage<Props> = ({
   userList,
   exceptUserList,
-}: {
-  userList: User[];
-  exceptUserList: User[];
+  profileEdits,
+  grades,
 }) => {
   const { login } = useSelector(selectLogin);
   const [userProfile, setUserProfile] = React.useState<UserEdit>({
@@ -30,6 +35,7 @@ const User: NextPage<Props> = ({
     grade: '',
     gender: '',
   });
+  const [postGrade, setPostGrade] = React.useState<string>('');
   const [currIdx, setCurrIdx] = React.useState<number>(0);
 
   const [exceptCurrIdx, setExceptCurrIdx] = React.useState<number>(0);
@@ -53,16 +59,27 @@ const User: NextPage<Props> = ({
       return alert('학생 추가 실패');
     }
 
-    setUserProfile({
+    setUserProfile(() => ({
+      ...userProfile,
       name: '',
-      grade: '',
-      gender: '',
-    });
+    }));
     route.replace(route.asPath);
     return alert('학생 추가 성공');
   };
 
-  const handleUserDelete = async (userId: string) => {
+  const postGradeHandler = async (grade: string) => {
+    const res = await fetch(`${NEXT_SERVER}/v1/grade/post?id=${grade}`, {
+      method: 'POST',
+    });
+    if (!res.ok) {
+      return alert(`${grade}반 추가를 실패했습니다.`);
+    }
+    setPostGrade('');
+    route.replace(route.asPath);
+    return alert(`${grade}반을 추가했습니다.`);
+  };
+
+  const userDeleteHandler = async (userId: string) => {
     const res = await fetch(`${NEXT_SERVER}/v1/user/post?id=${userId}`, {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
@@ -74,16 +91,28 @@ const User: NextPage<Props> = ({
     return alert('학생을 삭제했습니다.');
   };
 
-  const handleUserInsert = async (userId: string) => {
+  const userUpdateHandler = async (userId: string) => {
     const res = await fetch(`${NEXT_SERVER}/v1/user/post?id=${userId}`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
     });
     if (!res.ok) {
-      return alert('학생 제외하지 못했습니다.');
+      return alert('학생정보를 변경하지 못했습니다.');
     }
     route.replace(route.asPath);
-    return alert('학생을 제외했습니다.');
+    return alert('학생정보를 변경했습니다.');
+  };
+
+  const userGradeUpdateHandler = async (userId: string) => {
+    const res = await fetch(`${NEXT_SERVER}/v1/user/post?id=${userId}`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+    });
+    if (!res.ok) {
+      return alert('학생정보를 변경하지 못했습니다.');
+    }
+    route.replace(route.asPath);
+    return alert('학생정보를 변경했습니다.');
   };
 
   React.useEffect(() => {
@@ -102,8 +131,8 @@ const User: NextPage<Props> = ({
       <Container>
         <div className="grid sm:grid-cols-2 grid-cols-1 pt-8 px-6 text-left">
           <div>
-            <h2 className="pt-24 pb-8">학생 정보 추가</h2>
-            {profileEditMap.map((edit, idx) => {
+            <h2 className="pt-16 pb-8">학생 정보 추가</h2>
+            {profileEdits.map((edit, idx) => {
               return (
                 <div className="pb-4" key={idx}>
                   <div className="pb-4">{edit.tit}</div>
@@ -140,6 +169,58 @@ const User: NextPage<Props> = ({
               }}>
               추가
             </Button>
+
+            <h2 className="pt-16 pb-8">반 정보 추가</h2>
+            {gradeEditMap.map((edit, idx) => {
+              return (
+                <div className="pb-4" key={idx}>
+                  <div className="pb-4">{edit.tit}</div>
+                  {!edit.data ? (
+                    <input
+                      name={edit.name}
+                      value={postGrade}
+                      type={edit.type}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setPostGrade(e.target.value);
+                      }}
+                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                        if (e.key === 'Enter') {
+                          if (postGrade !== '') {
+                            postGradeHandler(postGrade);
+                          }
+                        }
+                      }}
+                    />
+                  ) : (
+                    edit.data.map((e, idx) => {
+                      return (
+                        <span className="pr-4" key={idx}>
+                          <span>{e.value}</span>
+                          <input
+                            type={edit.type}
+                            name={edit.name}
+                            value={postGrade}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) => {
+                              setPostGrade(e.target.value);
+                            }}
+                          />
+                        </span>
+                      );
+                    })
+                  )}
+                </div>
+              );
+            })}
+            <Button
+              onClick={() => {
+                if (postGrade !== '') {
+                  postGradeHandler(postGrade);
+                }
+              }}>
+              추가
+            </Button>
           </div>
           <div>
             <h2 className="pt-16 pb-8">전체 학생 정보 [{userList.length}]</h2>
@@ -154,7 +235,6 @@ const User: NextPage<Props> = ({
                 return (
                   <UserContent
                     key={grade}
-                    condition="제외"
                     handleCurrIdx={() => {
                       setCurrIdx(idx);
                     }}
@@ -162,7 +242,16 @@ const User: NextPage<Props> = ({
                     count={count}
                     isShow={currIdx === idx}
                     userList={userList}
-                    handleUser={(_id: string) => handleUserInsert(_id)}
+                    buttonProps={[
+                      {
+                        condition: '반변경',
+                        buttonHandler: (_id: string) => {},
+                      },
+                      {
+                        condition: '제외',
+                        buttonHandler: (_id: string) => userUpdateHandler(_id),
+                      },
+                    ]}
                   />
                 );
               })}
@@ -181,13 +270,21 @@ const User: NextPage<Props> = ({
                 return (
                   <UserContent
                     key={grade}
-                    condition="삭제"
                     handleCurrIdx={() => setExceptCurrIdx(idx)}
                     grade={grade}
                     count={count}
                     isShow={exceptCurrIdx === idx}
                     userList={exceptUserList}
-                    handleUser={(_id: string) => handleUserDelete(_id)}
+                    buttonProps={[
+                      {
+                        condition: '추가',
+                        buttonHandler: (_id: string) => userUpdateHandler(_id),
+                      },
+                      {
+                        condition: '삭제',
+                        buttonHandler: (_id: string) => userDeleteHandler(_id),
+                      },
+                    ]}
                   />
                 );
               })}
@@ -202,8 +299,21 @@ const User: NextPage<Props> = ({
 export default User;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const grades = (await fetchGradeList()) as Grade[];
+  profileEditMap.map((profile) => {
+    if (profile.name === 'grade') {
+      profile.data = [];
+      grades.forEach((g) => {
+        profile.data?.push({ value: g.grade });
+      });
+    }
+  });
   return {
     props: {
+      grades: grades.map((g) => {
+        return g.grade;
+      }),
+      profileEdits: profileEditMap,
       userList: (await fetchUserList()) as User[],
       exceptUserList: (await fetchExceptUserList()) as User[],
     },

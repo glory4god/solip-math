@@ -1,4 +1,4 @@
-interface EditMap {
+export interface EditMap {
   tit: string;
   name: 'name' | 'grade' | 'gender';
   type: string;
@@ -18,20 +18,21 @@ export const profileEditMap: EditMap[] = [
     tit: '학년',
     name: 'grade',
     type: 'radio',
-    data: [
-      { value: '중1' },
-      { value: '중2' },
-      { value: '중3' },
-      { value: '고1' },
-      { value: '고2' },
-      { value: '고3' },
-    ],
+    data: [],
   },
   {
     tit: '성별',
     name: 'gender',
     type: 'radio',
     data: [{ value: '남' }, { value: '여' }],
+  },
+];
+
+export const gradeEditMap: EditMap[] = [
+  {
+    tit: '반이름',
+    name: 'grade',
+    type: 'text',
   },
 ];
 
@@ -45,8 +46,6 @@ export const studentMenu: Menu[] = [
   { name: '학생관리', code: '2' },
   { name: '성적관리', code: '3' },
 ];
-
-export const grades = ['중1', '중2', '중3', '고1', '고2', '고3'];
 
 type GradeTag = 'name' | 'date' | 'testName' | 'score' | 'comment';
 
