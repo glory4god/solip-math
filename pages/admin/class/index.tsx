@@ -5,17 +5,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/dist/client/router';
 
 import { User } from 'types/user';
-import { grades } from 'public/data';
 import { Container } from 'components/ui/Container';
 import Button from '@material-ui/core/Button';
 import { ClassContainer } from 'components/class';
 import { selectLogin } from 'lib/redux/login/loginSlice';
+import { fetchGradeList } from 'lib/apis/user';
 
 interface Props {
-  userList: User[];
+  grades: string[];
 }
 
-const Main: NextPage<Props> = ({}: {}) => {
+const Main: NextPage<Props> = ({ grades }) => {
   const { login } = useSelector(selectLogin);
   const [grade, setGrade] = React.useState<number>(1);
   const route = useRouter();
@@ -54,7 +54,12 @@ const Main: NextPage<Props> = ({}: {}) => {
 export default Main;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const grades = await fetchGradeList();
   return {
-    props: {},
+    props: {
+      grades: grades.map((g) => {
+        return g.grade;
+      }),
+    },
   };
 };
