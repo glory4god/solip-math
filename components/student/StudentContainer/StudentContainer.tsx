@@ -47,7 +47,7 @@ const StudentContainer: React.FC<Props> = ({}) => {
     }));
   };
 
-  const deleteManagement = async (id: string) => {
+  const deleteHandler = async (id: string) => {
     const res = await fetch(`${NEXT_SERVER}/v1/management/student/${id}/post`, {
       method: 'DELETE',
     });
@@ -59,7 +59,7 @@ const StudentContainer: React.FC<Props> = ({}) => {
     setInitialFetch();
   };
 
-  const patchManagement = async (id: string, postData: PostManagement) => {
+  const patchHandler = async (id: string, postData: PostManagement) => {
     const res = await fetch(`${NEXT_SERVER}/v1/management/student/${id}/post`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
@@ -135,7 +135,7 @@ const StudentContainer: React.FC<Props> = ({}) => {
                       <>
                         <th className="sm:px-8 px-2">
                           <input
-                            className="w-full  h-8"
+                            className="w-full h-8"
                             type="text"
                             name="author"
                             value={editManagement.author}
@@ -150,7 +150,7 @@ const StudentContainer: React.FC<Props> = ({}) => {
                             onChange={onChangeHandler}
                           />
                         </td>
-                        <td className="sm:px-8 flex py-4 justify-center sm:flex-row flex-col">
+                        <td className="sm:px-8 flex justify-center sm:flex-row flex-col">
                           <Button
                             onClick={() => {
                               if (editManagement.author === '') {
@@ -158,7 +158,7 @@ const StudentContainer: React.FC<Props> = ({}) => {
                               } else if (editManagement.content === '') {
                                 alert('내용을 입력하세요');
                               } else {
-                                patchManagement(management._id, editManagement);
+                                patchHandler(management._id, editManagement);
                               }
                             }}>
                             수정
@@ -186,7 +186,7 @@ const StudentContainer: React.FC<Props> = ({}) => {
                             management.content,
                           )}
                         />
-                        <td className="flex py-4 justify-center sm:flex-row flex-col">
+                        <td className="flex justify-center sm:flex-row flex-col">
                           <Button
                             onClick={() => {
                               setEditId(management._id);
@@ -203,7 +203,7 @@ const StudentContainer: React.FC<Props> = ({}) => {
                             onClick={() => {
                               const result = confirm('글을 삭제하시겠습니까?');
                               if (result) {
-                                deleteManagement(management._id);
+                                deleteHandler(management._id);
                               }
                             }}>
                             삭제

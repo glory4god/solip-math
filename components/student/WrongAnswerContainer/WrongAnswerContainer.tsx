@@ -123,7 +123,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
               <tr>
                 <th className="sm:px-8 px-2">Loading ... </th>
                 <td className="px-4">Loading ...</td>
-                <td className="sm:px-8 flex py-4 justify-center sm:flex-row flex-col">
+                <td className="sm:px-8 flex justify-center sm:flex-row flex-col">
                   Loading ...
                 </td>
               </tr>
@@ -134,7 +134,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
                 return (
                   <tr key={wrongs.book}>
                     <th>
-                      {wrongs.book}{' '}
+                      {wrongs.book} <br />
                       <a
                         href="#"
                         onClick={() => {
@@ -145,8 +145,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
                             deleteWrongAnswer(selectedUserId, wrongs.book);
                           } else {
                           }
-                        }}
-                        className="text-xs text-red-300">
+                        }}>
                         책 지우기
                       </a>
                     </th>
@@ -164,7 +163,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
                         );
                       })}
                     </td>
-                    <td className="flex py-4 sm:flex-row flex-col">
+                    <td className="flex sm:flex-row flex-col">
                       <input
                         className="w-full"
                         name={wrongs.book}
