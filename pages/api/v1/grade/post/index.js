@@ -1,11 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+// import type { NextApiRequest, NextApiResponse } from 'next';
 import { dbConnect } from 'backend/mongoDB/dbConnect';
 import Grade from 'backend/mongoDB/models/Grade';
 import User from 'backend/mongoDB/models/User';
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req,
+  // : NextApiRequest
+  res,
+  // :   NextApiResponse,
 ) {
   await dbConnect();
   const { id } = req.query;
@@ -13,7 +15,7 @@ export default async function handler(
   if (req.method === 'POST') {
     const grade = new Grade({ grade: id });
 
-    grade.save((err: any) => {
+    grade.save((err) => {
       if (err) {
         return res.status(400).json({ status: 400, message: 'save failed' });
       } else {
@@ -21,7 +23,7 @@ export default async function handler(
       }
     });
   } else if (req.method === 'DELETE') {
-    User.find({ grade: id }, (err: any, users: any) => {
+    User.find({ grade: id }, (err, users) => {
       if (!err) {
         if (users.length !== 0) {
           return res.status(400).json({
@@ -29,7 +31,7 @@ export default async function handler(
             message: 'delete failed / remain grade in users',
           });
         } else {
-          Grade.findOneAndDelete({ grade: id }, (err: any, grade: any) => {
+          Grade.findOneAndDelete({ grade: id }, (err, grade) => {
             if (err) {
               return res
                 .status(400)
@@ -49,20 +51,12 @@ export default async function handler(
     });
   } else if (req.method === 'PATCH') {
     const { userId } = req.query;
-    // User.findByIdAndUpdate(
-    //   userId,
-    //   { $set: { grade: id } },
-    //   (err: any, user: any) => {
-    //     if (err) {
-    //       return res
-    //         .status(400)
-    //         .json({ status: 400, message: 'update failed' });
-    //     } else {
-    //       return res
-    //         .status(200)
-    //         .json({ status: 200, message: 'update success' });
-    //     }
-    //   },
-    // );
+    User.findByIdAndUpdate(userId, { $set: { grade: id } }, (err, user) => {
+      if (err) {
+        return res.status(400).json({ status: 400, message: 'update failed' });
+      } else {
+        return res.status(200).json({ status: 200, message: 'update success' });
+      }
+    });
   }
 }

@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
-export interface ClassManagementProps {
+export interface IClassManagement extends Document {
   author: string;
   grade: string;
   content: string;
@@ -14,7 +14,7 @@ type Comment = {
   createdDate: Date;
 };
 
-const ClassManagementSchema = new mongoose.Schema<ClassManagementProps>(
+const ClassManagementSchema = new mongoose.Schema<IClassManagement>(
   {
     author: {
       type: String,
@@ -43,4 +43,8 @@ const ClassManagementSchema = new mongoose.Schema<ClassManagementProps>(
 );
 
 export default mongoose.models.ClassManagement ||
-  mongoose.model('ClassManagement', ClassManagementSchema, 'classManagements');
+  mongoose.model<IClassManagement>(
+    'ClassManagement',
+    ClassManagementSchema,
+    'classManagements',
+  );

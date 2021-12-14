@@ -1,16 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+// import type { NextApiRequest, NextApiResponse } from 'next';
 import { dbConnect } from 'backend/mongoDB/dbConnect';
 import WrongAnswer from 'backend/mongoDB/models/WrongAnswer';
 import User from 'backend/mongoDB/models/User';
 
-type WrongAnswerType = {
-  studentName: string;
-  book: string;
-  number: string;
-};
+// type WrongAnswerType = {
+//   studentName: string;
+//   book: string;
+//   number: string;
+// };
+
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req,
+  // : NextApiRequest,
+  res,
+  // : NextApiResponse,
 ) {
   await dbConnect();
 
@@ -19,30 +22,32 @@ export default async function handler(
   if (req.method === 'GET') {
     const user = await User.findOne({ _id: id });
 
-    // WrongAnswer.aggregate(
-    //   [
-    //     { $match: { studentName: user.name } },
-    //     { $sort: { number: 1 } },
-    //     { $group: { _id: '$book', numbers: { $push: '$$ROOT' } } },
-    //     {
-    //       $project: {
-    //         book: '$_id',
-    //         _id: 0,
-    //         numbers: { _id: 1, number: 1 },
-    //       },
-    //     },
-    //     { $sort: { book: 1 } },
-    //   ],
-    //   (err: any, data: any) => {
-    //     if (data) {
-    //       return res.status(200).json(data);
-    //     } else {
-    //       return res.status(400).json({ status: 400, message: 'get failed' });
-    //     }
-    //   },
-    // );
+    WrongAnswer.aggregate(
+      [
+        { $match: { studentName: user.name } },
+        { $sort: { number: 1 } },
+        { $group: { _id: '$book', numbers: { $push: '$$ROOT' } } },
+        {
+          $project: {
+            book: '$_id',
+            _id: 0,
+            numbers: { _id: 1, number: 1 },
+          },
+        },
+        { $sort: { book: 1 } },
+      ],
+      (err, data) => {
+        if (data) {
+          return res.status(200).json(data);
+        } else {
+          return res.status(400).json({ status: 400, message: 'get failed' });
+        }
+      },
+    );
   } else if (req.method === 'POST') {
-    const wrong: WrongAnswerType = req.body;
+    const wrong =
+      // : WrongAnswerType
+      req.body;
 
     if (wrong.studentName === '') {
       return res
@@ -57,7 +62,7 @@ export default async function handler(
       });
 
       answer.createdDate = new Date();
-      answer.save((err: any) => {
+      answer.save((err) => {
         if (err) {
           return res.status(400).json({ status: 400, message: 'saved failed' });
         } else {
@@ -71,7 +76,7 @@ export default async function handler(
     const { book } = req.query;
 
     if (!book) {
-      WrongAnswer.findByIdAndRemove({ _id: id }, (err: any) => {
+      WrongAnswer.findByIdAndRemove({ _id: id }, (err) => {
         if (err) {
           return res
             .status(400)
@@ -87,7 +92,7 @@ export default async function handler(
 
       WrongAnswer.deleteMany(
         { studentName: user.name, book: book },
-        (err: any, data: any) => {
+        (err, data) => {
           if (err) {
             return res
               .status(400)
