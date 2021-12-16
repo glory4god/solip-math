@@ -6,8 +6,6 @@ import { EditMap, gradeEditMap, profileEditMap } from 'public/data';
 import Button from '@material-ui/core/Button';
 import { NEXT_SERVER } from 'config';
 import { Grade, User, UserEdit } from 'types/user';
-import { useSelector } from 'react-redux';
-import { selectLogin } from 'lib/redux/login/loginSlice';
 import { useRouter } from 'next/dist/client/router';
 import {
   fetchExceptUserList,
@@ -29,7 +27,6 @@ const User: NextPage<Props> = ({
   profileEdits,
   grades,
 }) => {
-  const { login } = useSelector(selectLogin);
   const [userProfile, setUserProfile] = React.useState<UserEdit>({
     name: '',
     grade: '',
@@ -80,7 +77,7 @@ const User: NextPage<Props> = ({
   };
 
   const userDeleteHandler = async (userId: string) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/user/post?id=${userId}`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/user/post?userId=${userId}`, {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
     });
@@ -92,7 +89,7 @@ const User: NextPage<Props> = ({
   };
 
   const userUpdateHandler = async (userId: string) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/user/post?id=${userId}`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/user/post?userId=${userId}`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
     });
@@ -104,7 +101,7 @@ const User: NextPage<Props> = ({
   };
 
   const userGradeUpdateHandler = async (userId: string) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/user/post?id=${userId}`, {
+    const res = await fetch(`${NEXT_SERVER}/v1/user/post?userId=${userId}`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
     });
@@ -114,12 +111,6 @@ const User: NextPage<Props> = ({
     route.replace(route.asPath);
     return alert('학생정보를 변경했습니다.');
   };
-
-  React.useEffect(() => {
-    if (!login) {
-      route.replace('/login');
-    }
-  }, []);
 
   return (
     <>

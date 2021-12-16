@@ -3,13 +3,19 @@ import Link from 'next/link';
 import s from './Navbar.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLogin, setLogin } from 'lib/redux/login/loginSlice';
-import { route } from 'next/dist/server/router';
 import { useRouter } from 'next/dist/client/router';
 
 const Navbar = () => {
   const { login } = useSelector(selectLogin);
   const route = useRouter();
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (!login) {
+      route.replace('/login');
+    }
+  }, [login]);
+
   return (
     <>
       <div className={s.paper}>

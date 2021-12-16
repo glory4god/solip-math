@@ -4,12 +4,6 @@ import User from 'backend/mongoDB/models/User';
 import WrongAnswer from 'backend/mongoDB/models/WrongAnswer';
 import Management from 'backend/mongoDB/models/StudentManagement';
 
-type Post = {
-  name: string;
-  grade: '중1' | '중2' | '중3' | '고1' | '고2' | '고3';
-  gender: '남' | '여';
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -18,7 +12,7 @@ export default async function handler(
 
   const edit = req.body;
 
-  const { id } = req.query;
+  const { userId } = req.query;
 
   if (req.method === 'POST') {
     User.findOne({ name: edit.name }, (err: any, user: any) => {
@@ -44,7 +38,7 @@ export default async function handler(
       }
     });
   } else if (req.method === 'DELETE') {
-    User.findOneAndDelete({ _id: id }, (err: any, user: any) => {
+    User.findByIdAndDelete(userId, (err: any, user: any) => {
       if (err) {
         return res.status(400).json({ status: 400, message: 'delete failed' });
       } else {
@@ -73,18 +67,8 @@ export default async function handler(
       }
     });
   } else if (req.method === 'PATCH') {
-    User.findById(id, (err: any, user: any) => {
-      // User.findByIdAndUpdate(
-      //   id,
-      //   { $set: { auth: user.auth ? false : true } },
-      //   (err) => {
-      //     if (err) {
-      //       return res.status(400).json({ status: 400, message: '수정 실패' });
-      //     } else {
-      //       return res.status(200).json({ status: 200, message: '수정 성공' });
-      //     }
-      //   },
-      // );
-    });
+    let user = await User.findById(userId);
+    user.auth = !user.auth;
+    await user.save();
   }
 }

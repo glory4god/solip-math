@@ -1,14 +1,12 @@
 import React from 'react';
 import Head from 'next/head';
 import type { GetServerSideProps, NextPage } from 'next';
-import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/dist/client/router';
 
-import { User } from 'types/user';
-import { Container } from 'components/ui/Container';
 import Button from '@material-ui/core/Button';
+import { Container } from 'components/ui/Container';
 import { ClassContainer } from 'components/class';
-import { selectLogin } from 'lib/redux/login/loginSlice';
+
 import { fetchGradeList } from 'lib/apis/user';
 
 interface Props {
@@ -16,15 +14,8 @@ interface Props {
 }
 
 const Main: NextPage<Props> = ({ grades }) => {
-  const { login } = useSelector(selectLogin);
   const [grade, setGrade] = React.useState<number>(1);
   const route = useRouter();
-
-  React.useEffect(() => {
-    if (!login) {
-      route.push('/login');
-    }
-  });
 
   return (
     <>

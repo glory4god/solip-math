@@ -11,7 +11,6 @@ import {
   setSelectedUser,
   setSelectedUserId,
 } from 'lib/redux/user/userSlice';
-import { selectLogin } from 'lib/redux/login/loginSlice';
 
 import { BASE_URL } from 'config';
 
@@ -29,7 +28,6 @@ interface Props {}
 const Student: NextPage<Props> = ({}) => {
   const { selectedGrade, selectedUserId, selectedUser, users } =
     useSelector(selectUser);
-  const { login } = useSelector(selectLogin);
 
   const [grades, setGrades] = React.useState<string[]>([]);
 
@@ -42,14 +40,12 @@ const Student: NextPage<Props> = ({}) => {
     dispatch(setSelectedUserId(e.target.value));
     route.push(`/admin/student/${e.target.value}?pages=${route.query.pages}`);
   };
+
   React.useEffect(() => {
     if (selectedUserId !== '') {
       route.push(`${BASE_URL}/admin/student/${selectedUserId}?pages=1`);
     }
-    if (!login) {
-      route.push(`${BASE_URL}/login`);
-    }
-  }, [login, selectedUserId]);
+  }, [selectedUserId]);
 
   const getGrades = React.useCallback(async () => {
     const res = (await fetchGradeList()) as Grade[];
@@ -61,7 +57,7 @@ const Student: NextPage<Props> = ({}) => {
 
   React.useEffect(() => {
     getGrades();
-  }, []);
+  }, [getGrades]);
 
   return (
     <>
