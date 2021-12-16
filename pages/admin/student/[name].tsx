@@ -24,10 +24,14 @@ import { ModalCtrl, Wrapper } from 'components/student';
 import { Container } from 'components/ui/Container';
 
 interface Props {
-  grades: string[];
+  // grades: string[];
 }
 
-const Student: NextPage<Props> = ({ grades }) => {
+const Student: NextPage<Props> = (
+  {
+    // grades
+  },
+) => {
   const { selectedGrade, selectedUserId, selectedUser, users } =
     useSelector(selectUser);
   const { login } = useSelector(selectLogin);
@@ -79,13 +83,13 @@ const Student: NextPage<Props> = ({ grades }) => {
                   );
                 }
               }}>
-              {grades?.map((user, idx) => {
+              {/* {grades?.map((user, idx) => {
                 return (
                   <option key={idx} value={user}>
                     {user}
                   </option>
                 );
-              })}
+              })} */}
             </select>
             <select className="w-32" value={selectedUserId} onChange={onChange}>
               {users?.map((user, idx) => {
@@ -149,19 +153,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const { name } = context.params as IParams;
   const grades = await fetchGradeList();
-  if (!grades) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
+  // if (!grades) {
+  //   return {
+  //     redirect: {
+  //       destination: '/',
+  //       permanent: false,
+  //     },
+  //   };
+  // }
   return {
     props: {
-      grades: grades.map((g) => {
-        return g.grade;
-      }),
+      // grades: grades.map((g) => {
+      //   return g.grade;
+      // }),
     },
   };
 };
