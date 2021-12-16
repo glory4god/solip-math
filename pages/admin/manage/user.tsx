@@ -91,7 +91,6 @@ const User: NextPage<Props> = ({
   const userUpdateHandler = async (userId: string) => {
     const res = await fetch(`${NEXT_SERVER}/v1/user/post?userId=${userId}`, {
       method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
     });
     if (!res.ok) {
       return alert('학생정보를 변경하지 못했습니다.');
@@ -103,7 +102,6 @@ const User: NextPage<Props> = ({
   const userGradeUpdateHandler = async (userId: string) => {
     const res = await fetch(`${NEXT_SERVER}/v1/user/post?userId=${userId}`, {
       method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
     });
     if (!res.ok) {
       return alert('학생정보를 변경하지 못했습니다.');

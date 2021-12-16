@@ -67,8 +67,12 @@ export default async function handler(
       }
     });
   } else if (req.method === 'PATCH') {
+    console.log('시작');
     let user = await User.findById(userId);
     user.auth = !user.auth;
     await user.save();
+    return res
+      .status(200)
+      .json({ status: 200, message: 'user auth patch success' });
   }
 }
