@@ -22,19 +22,16 @@ import { fetchGradeList, fetchUserIds } from 'lib/apis/user';
 import { ParsedUrlQuery } from 'querystring';
 import { ModalCtrl, Wrapper } from 'components/student';
 import { Container } from 'components/ui/Container';
+import { Grade } from 'types/user';
 
-interface Props {
-  // grades: string[];
-}
+interface Props {}
 
-const Student: NextPage<Props> = (
-  {
-    // grades
-  },
-) => {
+const Student: NextPage<Props> = ({}) => {
   const { selectedGrade, selectedUserId, selectedUser, users } =
     useSelector(selectUser);
   const { login } = useSelector(selectLogin);
+
+  const [grades, setGrades] = React.useState<string[]>([]);
 
   const dispatch = useDispatch();
   const route = useRouter();
@@ -53,6 +50,18 @@ const Student: NextPage<Props> = (
       route.push(`${BASE_URL}/login`);
     }
   }, [login, selectedUserId]);
+
+  const getGrades = React.useCallback(async () => {
+    const res = (await fetchGradeList()) as Grade[];
+    const grades = res.map((g) => {
+      return g.grade;
+    });
+    setGrades(grades);
+  }, []);
+
+  React.useEffect(() => {
+    getGrades();
+  }, []);
 
   return (
     <>
@@ -83,13 +92,13 @@ const Student: NextPage<Props> = (
                   );
                 }
               }}>
-              {/* {grades?.map((user, idx) => {
+              {grades?.map((user, idx) => {
                 return (
                   <option key={idx} value={user}>
                     {user}
                   </option>
                 );
-              })} */}
+              })}
             </select>
             <select className="w-32" value={selectedUserId} onChange={onChange}>
               {users?.map((user, idx) => {
@@ -152,20 +161,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { name } = context.params as IParams;
-  const grades = await fetchGradeList();
-  // if (!grades) {
-  //   return {
-  //     redirect: {
-  //       destination: '/',
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+
   return {
-    props: {
-      // grades: grades.map((g) => {
-      //   return g.grade;
-      // }),
-    },
+    props: {},
   };
 };
