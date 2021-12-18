@@ -14,7 +14,11 @@ interface ContentProps {
   count: number;
   isShow: boolean;
   userList: User[];
-  buttonProps: { condition: string; buttonHandler: (_id: string) => void }[];
+  buttonProps: {
+    type: 'alert' | 'modal';
+    condition: string;
+    buttonHandler: (user: User) => void;
+  }[];
 }
 
 const UserContent: React.FC<ContentProps> = ({
@@ -68,25 +72,29 @@ const UserContent: React.FC<ContentProps> = ({
             if (user.grade === grade)
               return (
                 <div
-                  className={`flex justify-between items-center`}
+                  className="flex justify-between items-center"
                   key={user.name}>
                   <span>{user.name}</span>
                   <div>
-                    {buttonProps.map((button) => {
+                    {buttonProps.map(({ type, condition, buttonHandler }) => {
                       return (
                         <Button
-                          key={button.condition}
+                          key={condition}
                           variant="outlined"
                           color="secondary"
                           onClick={() => {
-                            const result = confirm(
-                              `${user.name}학생을 ${button.condition}하시겠습니까?`,
-                            );
-                            if (result) {
-                              button.buttonHandler(user._id);
+                            if (type === 'alert') {
+                              const result = confirm(
+                                `${user.name}학생을 ${condition}하시겠습니까?`,
+                              );
+                              if (result) {
+                                buttonHandler(user);
+                              }
+                            } else if (type === 'modal') {
+                              buttonHandler(user);
                             }
                           }}>
-                          <a>{button.condition}</a>
+                          <a>{condition}</a>
                         </Button>
                       );
                     })}
