@@ -5,12 +5,14 @@ interface ModalSliceProps {
   showScoreWriteModal: boolean;
   showWrongWriteModal: boolean;
   showManagementWriteModal: boolean;
+  showChangeGradeModal: boolean;
 }
 
 const initialState: ModalSliceProps = {
   showScoreWriteModal: false,
   showWrongWriteModal: false,
   showManagementWriteModal: false,
+  showChangeGradeModal: false,
 };
 
 export const modalSlice = createSlice({
@@ -29,6 +31,9 @@ export const modalSlice = createSlice({
     ) => {
       state.showManagementWriteModal = action.payload;
     },
+    SET_SHOW_CHANGE_GRADE_MODAL: (state, action: PayloadAction<boolean>) => {
+      state.showChangeGradeModal = action.payload;
+    },
   },
 });
 
@@ -36,6 +41,7 @@ export const {
   SET_SHOW_SCORE_WRITE_MODAL,
   SET_SHOW_WRONG_WRITE_MODAL,
   SET_SHOW_MANAGEMENT_WRITE_MODAL,
+  SET_SHOW_CHANGE_GRADE_MODAL,
 } = modalSlice.actions;
 
 export const selectModal = (state: RootState) => state.modal;
@@ -63,5 +69,16 @@ export function closeWriteModal(modalName: string) {
     } else if (modalName === 'management') {
       dispatch(SET_SHOW_MANAGEMENT_WRITE_MODAL(false));
     }
+  };
+}
+
+export function openChangeGradeModal() {
+  return (dispatch: any) => {
+    dispatch(SET_SHOW_CHANGE_GRADE_MODAL(true));
+  };
+}
+export function closeChangeGradeModal() {
+  return (dispatch: any) => {
+    dispatch(SET_SHOW_CHANGE_GRADE_MODAL(false));
   };
 }
