@@ -18,7 +18,7 @@ type PostManagement = {
 
 interface ModalCtrlProp {}
 
-const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
+const StudentModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
   const { showScoreWriteModal, showWrongWriteModal, showManagementWriteModal } =
     useSelector(selectModal);
   const { selectedUser } = useSelector(selectUser);
@@ -26,7 +26,7 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
   const router = useRouter();
 
   const [postScore, setPostScore] = React.useState<PostScore>({
-    studentName: selectedUser,
+    studentName: selectedUser.name,
     date: '',
     testName: '',
     score: '',
@@ -34,14 +34,14 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
   });
 
   const [postAddBook, setPostAddBook] = React.useState<WrongAnswerType>({
-    studentName: selectedUser,
+    studentName: selectedUser.name,
     book: '',
     number: '',
   });
 
   const [postManagement, setPostManagement] = React.useState<PostManagement>({
     author: '',
-    studentName: selectedUser,
+    studentName: selectedUser.name,
     content: '',
   });
 
@@ -55,7 +55,7 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
       return alert('저장에 실패했습니다.');
     } else {
       setPostAddBook({
-        studentName: selectedUser,
+        studentName: selectedUser.name,
         book: '',
         number: '',
       });
@@ -80,7 +80,7 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
     } else {
       setPostManagement({
         author: '',
-        studentName: selectedUser,
+        studentName: selectedUser.name,
         content: '',
       });
       alert('글이 작성됐습니다.');
@@ -110,7 +110,7 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
       return alert('저장에 실패했습니다.');
     } else {
       setPostScore({
-        studentName: selectedUser,
+        studentName: selectedUser.name,
         testName: '',
         date: '',
         score: '',
@@ -178,4 +178,4 @@ const ModalCtrl: React.FC<ModalCtrlProp> = ({}) => {
   );
 };
 
-export default ModalCtrl;
+export default StudentModalCtrl;

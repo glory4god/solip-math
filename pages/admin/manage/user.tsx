@@ -10,9 +10,14 @@ import { useRouter } from 'next/dist/client/router';
 import {
   fetchExceptUserList,
   fetchGradeList,
+  fetchUser,
   fetchUserList,
 } from 'lib/apis/user';
 import { UserContent } from 'components/manage';
+import { useDispatch } from 'react-redux';
+import { ManageModalCtrl } from 'components/ui/Modal';
+import { openChangeGradeModal } from 'lib/redux/modal/modalSlice';
+import { setGrades, setSelectedUser } from 'lib/redux/user/userSlice';
 
 interface Props {
   userList: User[];
@@ -36,7 +41,9 @@ const User: NextPage<Props> = ({
   const [currIdx, setCurrIdx] = React.useState<number>(0);
 
   const [exceptCurrIdx, setExceptCurrIdx] = React.useState<number>(0);
-  const route = useRouter();
+
+  const router = useRouter();
+  const dispatch = useDispatch();
 
   const onChange = (e: any) => {
     const { name, value } = e.target;
@@ -60,7 +67,7 @@ const User: NextPage<Props> = ({
       ...userProfile,
       name: '',
     }));
-    route.replace(route.asPath);
+    router.replace(router.asPath);
     return alert('학생 추가 성공');
   };
 
@@ -72,43 +79,39 @@ const User: NextPage<Props> = ({
       return alert(`${grade}반 추가를 실패했습니다.`);
     }
     setPostGrade('');
-    route.replace(route.asPath);
+    router.replace(router.asPath);
     return alert(`${grade}반을 추가했습니다.`);
   };
 
-  const userDeleteHandler = async (userId: string) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/user/post?userId=${userId}`, {
+  const userDeleteHandler = async (user: User) => {
+    const res = await fetch(`${NEXT_SERVER}/v1/user/post`, {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(user),
     });
     if (!res.ok) {
       return alert('학생 삭제하지 못했습니다.');
     }
-    route.replace(route.asPath);
+    router.replace(router.asPath);
     return alert('학생을 삭제했습니다.');
   };
 
-  const userUpdateHandler = async (userId: string) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/user/post?userId=${userId}`, {
+  const userPatchHandler = async (postUser: User) => {
+    const res = await fetch(`${NEXT_SERVER}/v1/user/post`, {
       method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(postUser),
     });
     if (!res.ok) {
       return alert('학생정보를 변경하지 못했습니다.');
     }
-    route.replace(route.asPath);
+    router.replace(router.asPath);
     return alert('학생정보를 변경했습니다.');
   };
 
-  const userGradeUpdateHandler = async (userId: string) => {
-    const res = await fetch(`${NEXT_SERVER}/v1/user/post?userId=${userId}`, {
-      method: 'PATCH',
-    });
-    if (!res.ok) {
-      return alert('학생정보를 변경하지 못했습니다.');
-    }
-    route.replace(route.asPath);
-    return alert('학생정보를 변경했습니다.');
-  };
+  React.useEffect(() => {
+    dispatch(setGrades(grades));
+  }, [dispatch, grades]);
 
   return (
     <>
@@ -233,12 +236,18 @@ const User: NextPage<Props> = ({
                     userList={userList}
                     buttonProps={[
                       {
+                        type: 'modal',
                         condition: '반변경',
-                        buttonHandler: (_id: string) => {},
+                        buttonHandler: async (user: User) => {
+                          dispatch(setSelectedUser(user));
+                          dispatch(openChangeGradeModal());
+                        },
                       },
                       {
+                        type: 'alert',
                         condition: '제외',
-                        buttonHandler: (_id: string) => userUpdateHandler(_id),
+                        buttonHandler: (user: User) =>
+                          userPatchHandler({ ...user, auth: !user.auth }),
                       },
                     ]}
                   />
@@ -266,12 +275,15 @@ const User: NextPage<Props> = ({
                     userList={exceptUserList}
                     buttonProps={[
                       {
+                        type: 'alert',
                         condition: '추가',
-                        buttonHandler: (_id: string) => userUpdateHandler(_id),
+                        buttonHandler: (user: User) =>
+                          userPatchHandler({ ...user, auth: !user.auth }),
                       },
                       {
+                        type: 'alert',
                         condition: '삭제',
-                        buttonHandler: (_id: string) => userDeleteHandler(_id),
+                        buttonHandler: (user: User) => userDeleteHandler(user),
                       },
                     ]}
                   />
@@ -281,6 +293,7 @@ const User: NextPage<Props> = ({
           </div>
         </div>
       </Container>
+      <ManageModalCtrl />
     </>
   );
 };

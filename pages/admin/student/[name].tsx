@@ -19,7 +19,8 @@ import { studentMenu } from 'public/data';
 
 import { fetchGradeList, fetchUserIds } from 'lib/apis/user';
 import { ParsedUrlQuery } from 'querystring';
-import { ModalCtrl, Wrapper } from 'components/student';
+import { Wrapper } from 'components/student';
+import { StudentModalCtrl } from 'components/ui/Modal';
 import { Container } from 'components/ui/Container';
 import { Grade } from 'types/user';
 
@@ -63,7 +64,7 @@ const Student: NextPage<Props> = ({}) => {
     <>
       <Head>
         <title>
-          {selectedGrade} {selectedUser} 학생관리 / 수학
+          {selectedGrade} {selectedUser.name} 학생관리 / 수학
         </title>
         <meta name="description" content="학생관리" />
       </Head>
@@ -82,7 +83,7 @@ const Student: NextPage<Props> = ({}) => {
 
                 if (filterUser !== undefined) {
                   dispatch(setSelectedUserId(filterUser._id));
-                  dispatch(setSelectedUser(filterUser.name));
+                  dispatch(setSelectedUser(filterUser));
                   route.push(
                     `/admin/student/${filterUser._id}?pages=${route.query.pages}`,
                   );
@@ -131,7 +132,7 @@ const Student: NextPage<Props> = ({}) => {
         </div>
         <Wrapper></Wrapper>
       </Container>
-      <ModalCtrl />
+      <StudentModalCtrl />
     </>
   );
 };

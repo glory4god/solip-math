@@ -5,4 +5,3 @@ export { default as ScoreContainer } from './ScoreContainer';
 
 export { default as DataInfoBox } from './DataInfoBox';
 export { default as DataInfoContent } from './DataInfoContent';
-export { default as ModalCtrl } from './ModalCtrl';

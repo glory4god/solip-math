@@ -23,7 +23,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
   const router = useRouter();
   // 책에 따른 번호만 추가하는 상태
   const [addWrongReq, setAddWrongReq] = React.useState<WrongAnswerType>({
-    studentName: selectedUser,
+    studentName: selectedUser.name,
     book: '',
     number: '',
   });
@@ -38,7 +38,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
       alert('저장에 실패했습니다.');
     } else {
       setAddWrongReq({
-        studentName: selectedUser,
+        studentName: selectedUser.name,
         book: '',
         number: '',
       });
@@ -85,7 +85,7 @@ const WrongAnswerContainer: React.FC<Props> = ({}) => {
     setWrongAnswerList(books);
     setIsLoading(false);
     setAddWrongReq({
-      studentName: selectedUser,
+      studentName: selectedUser.name,
       book: '',
       number: '',
     });

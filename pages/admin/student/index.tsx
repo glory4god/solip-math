@@ -28,7 +28,16 @@ const Main: NextPage<Props> = ({ userList, grades }) => {
 
   React.useEffect(() => {
     dispatch(setUsers(userList));
-    dispatch(setSelectedUser(''));
+    dispatch(
+      setSelectedUser({
+        _id: '',
+        name: '',
+        grade: '',
+        auth: undefined,
+        gender: '',
+        createdDate: new Date(),
+      }),
+    );
     dispatch(setSelectedUserId(''));
     dispatch(setSelectedGrade('중1'));
   }, []);

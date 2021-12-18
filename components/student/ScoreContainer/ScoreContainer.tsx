@@ -14,7 +14,7 @@ import { ScoreManagement } from 'types/user';
 interface Props {}
 
 const ScoreContainer: React.FC<Props> = ({}) => {
-  const { selectedUserId, selectedUser } = useSelector(selectUser);
+  const { selectedUserId } = useSelector(selectUser);
   const { showScoreWriteModal } = useSelector(selectModal);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -45,7 +45,7 @@ const ScoreContainer: React.FC<Props> = ({}) => {
     if (showScoreWriteModal === false) {
       setInitialFetch();
     }
-  }, [selectedUser, setInitialFetch, showScoreWriteModal]);
+  }, [setInitialFetch, showScoreWriteModal]);
 
   return (
     <>

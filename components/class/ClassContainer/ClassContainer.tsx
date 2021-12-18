@@ -23,7 +23,6 @@ type PostClassManagement = {
 };
 
 const ClassContainer: React.FC<Props> = ({ className, grade }) => {
-  const { selectedUser } = useSelector(selectUser);
   const [managementList, setManagementList] =
     React.useState<ClassManagement[]>();
 

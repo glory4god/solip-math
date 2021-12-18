@@ -19,7 +19,7 @@ type PostManagement = {
 };
 
 const StudentContainer: React.FC<Props> = ({}) => {
-  const { selectedUserId, selectedUser } = useSelector(selectUser);
+  const { selectedUserId } = useSelector(selectUser);
   const { showManagementWriteModal } = useSelector(selectModal);
 
   const dispatch = useDispatch();
@@ -92,7 +92,7 @@ const StudentContainer: React.FC<Props> = ({}) => {
     if (showManagementWriteModal === false) {
       setInitialFetch();
     }
-  }, [selectedUser, setInitialFetch, showManagementWriteModal]);
+  }, [, setInitialFetch, showManagementWriteModal]);
 
   return (
     <>
